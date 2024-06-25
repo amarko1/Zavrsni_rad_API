@@ -1,0 +1,6 @@
+@Zavrsni_rad_API_HostAddress = http://localhost:5026
+
+GET {{Zavrsni_rad_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
