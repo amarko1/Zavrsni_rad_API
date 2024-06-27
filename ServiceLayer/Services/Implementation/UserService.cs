@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Repositories.Abstraction;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Dto;
 using ServiceLayer.Provider;
@@ -28,7 +29,7 @@ namespace ServiceLayer.Services.Implementation
             _mapper = mapper;
         }
 
-        public AuthResponse Login(LoginRequest loginRequest)
+        public AuthResponse Login(ServiceLayer.ServiceModels.LoginRequest loginRequest)
         {
             if (!Authenticate(loginRequest.Email, loginRequest.Password))
             {
@@ -64,7 +65,7 @@ namespace ServiceLayer.Services.Implementation
             return new AuthResponse { IsSuccessful = true, Message = "Logout successful" };
         }
 
-        public AuthResponse RefreshToken(RefreshRequest refreshRequest)
+        public AuthResponse RefreshToken(ServiceLayer.ServiceModels.RefreshRequest refreshRequest)
         {
             var user = _repository.GetUser(u => u.RefreshToken!.Equals(refreshRequest.RefreshToken));
 
@@ -89,8 +90,19 @@ namespace ServiceLayer.Services.Implementation
             };
         }
 
-        public AuthResponse Register(RegisterRequest registerRequest)
+        public AuthResponse Register(UserRegistrationRequest registerRequest)
         {
+
+            if (_repository.CheckIfUsernameExists(registerRequest.Username))
+            {
+                return new AuthResponse { IsSuccessful = false, Message = "Username already exists" };
+            }
+
+            if (_repository.CheckIfEmailExists(registerRequest.Email))
+            {
+                return new AuthResponse { IsSuccessful = false, Message = "Email already exists" };
+            }
+
             byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
             string b64Salt = Convert.ToBase64String(salt);
 
@@ -106,10 +118,15 @@ namespace ServiceLayer.Services.Implementation
 
             _repository.CreateUser(new()
             {
+                FirstName = registerRequest.FirstName,
+                LastName = registerRequest.LastName,
+                Phone = registerRequest.Phone,
                 Username = registerRequest.Username,
                 Email = registerRequest.Email,
                 PwdSalt = b64Salt,
-                PwdHash = b64Hash
+                PwdHash = b64Hash,
+                IsDisabled = false,
+                Role = "User"
             });
 
             _repository.Save();

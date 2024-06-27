@@ -17,7 +17,7 @@ namespace Zavrsni_rad_API.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest registerRequest)
+        public IActionResult Register([FromBody] UserRegistrationRequest registerRequest)
         {
             var response = _userService.Register(registerRequest);
             return response.IsSuccessful ? Ok(response) : BadRequest(response);

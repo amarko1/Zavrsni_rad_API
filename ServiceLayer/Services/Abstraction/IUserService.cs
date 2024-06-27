@@ -11,7 +11,7 @@ namespace ServiceLayer.Services.Abstraction
     public interface IUserService
     {
         int GetUserIdByEmail(string email);
-        AuthResponse Register(RegisterRequest registerRequest);
+        AuthResponse Register(UserRegistrationRequest registerRequest);
         AuthResponse Login(LoginRequest loginRequest);
         AuthResponse RefreshToken(RefreshRequest refreshRequest);
         AuthResponse Logout(string email);
