@@ -14,6 +14,8 @@ namespace ServiceLayer.Mapping
         public AutoMapperProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Cake, CakeDto>().ReverseMap();
         }
     }
 }

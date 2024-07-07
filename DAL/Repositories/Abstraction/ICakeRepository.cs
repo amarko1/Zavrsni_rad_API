@@ -1,0 +1,19 @@
+﻿using DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DAL.Repositories.Abstraction
+{
+    public interface ICakeRepository
+    {
+        Task CreateCakeAsync(Cake newCake);
+        Task<Cake?> GetCakeAsync(int id);
+        Task<IEnumerable<Cake>> GetAllCakesAsync();
+        Task UpdateCakeAsync(Cake updatedCake);
+        Task DeleteCakeAsync(int id);
+        Task SaveAsync();
+    }
+}

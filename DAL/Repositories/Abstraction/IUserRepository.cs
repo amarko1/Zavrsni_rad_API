@@ -14,11 +14,9 @@ namespace DAL.Repositories.Abstraction
         void CreateUser(User newUser);
         User? GetUser(Expression<Func<User, bool>> filter);
         void UpdateRefreshToken(string? refreshToken, string userEmail);
-        void Save();
         IEnumerable<User> GetAll();
-
-        //Task<T?> GetUserAsyncBy(Expression<Func<T, bool>> filter);
         bool CheckIfUsernameExists(string username);
         bool CheckIfEmailExists(string email);
+        void Save();
     }
 }

@@ -73,7 +73,13 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICakeService, CakeService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICakeRepository, CakeRepository>();
+
 
 builder.Services.AddCors(options =>
 {
