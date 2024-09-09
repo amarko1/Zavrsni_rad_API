@@ -24,6 +24,10 @@ namespace DAL.AppDbContext
         public DbSet<Product> Products { get; set; }
         public DbSet<Cake> Cakes { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Supply> Supplies { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,7 +43,7 @@ namespace DAL.AppDbContext
                 .ToTable("Products"); 
 
             modelBuilder.Entity<Cake>()
-                .ToTable("Cakes");  
+                .ToTable("Cakes");
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
@@ -47,8 +51,32 @@ namespace DAL.AppDbContext
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Supply>()
+                .HasOne(s => s.Category)
+                .WithMany(c => c.Supplies)
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Recipe>()
+                .HasOne(r => r.Category)
+                .WithMany(c => c.Recipes)
+                .HasForeignKey(r => r.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasKey(ri => new { ri.RecipeId, ri.IngredientId });
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Recipe)
+                .WithMany(r => r.RecipeIngredients)
+                .HasForeignKey(ri => ri.RecipeId);
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Ingredient)
+                .WithMany()
+                .HasForeignKey(ri => ri.IngredientId);
+
             base.OnModelCreating(modelBuilder);
         }
     }
-
 }

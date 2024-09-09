@@ -16,6 +16,10 @@ namespace ServiceLayer.Mapping
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Cake, CakeDto>().ReverseMap();
+            CreateMap<Recipe, RecipeDto>().ReverseMap();
+            CreateMap<RecipeIngredient, RecipeIngredientDto>().ReverseMap();
+            CreateMap<Ingredient, IngredientDto>().ReverseMap();
+            CreateMap<Supply, SupplyDto>().ReverseMap();
         }
     }
 }

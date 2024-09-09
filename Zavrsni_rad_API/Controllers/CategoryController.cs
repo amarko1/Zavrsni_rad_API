@@ -23,7 +23,7 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("get")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             var category = await _categoryService.GetCategoryAsync(id);
@@ -41,7 +41,7 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
         }
 
-        [HttpPut("update")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto updatedCategory)
         {
             if (id != updatedCategory.Id)
@@ -59,7 +59,7 @@ namespace Zavrsni_rad_API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _categoryService.GetCategoryAsync(id);

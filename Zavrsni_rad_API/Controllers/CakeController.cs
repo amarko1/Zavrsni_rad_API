@@ -23,7 +23,7 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(cakes);
         }
 
-        [HttpGet("get")]
+        [HttpGet("get/{id}")]
         public async Task<IActionResult> GetCake(int id)
         {
             var cake = await _cakeService.GetCakeAsync(id);
@@ -41,7 +41,7 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetCake), new { id = createdCake.Id }, createdCake);
         }
 
-        [HttpPut("update")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateCake(int id, [FromBody] CakeDto updatedCake)
         {
             if (id != updatedCake.Id)
@@ -59,7 +59,7 @@ namespace Zavrsni_rad_API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCake(int id)
         {
             var cake = await _cakeService.GetCakeAsync(id);
