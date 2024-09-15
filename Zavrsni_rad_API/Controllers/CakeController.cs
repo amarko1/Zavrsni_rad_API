@@ -41,15 +41,15 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetCake), new { id = createdCake.Id }, createdCake);
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateCake(int id, [FromBody] CakeDto updatedCake)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateCake([FromBody] CakeDto updatedCake)
         {
-            if (id != updatedCake.Id)
+            if (updatedCake.Id <= 0)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
             }
 
-            var cake = await _cakeService.GetCakeAsync(id);
+            var cake = await _cakeService.GetCakeAsync(updatedCake.Id);
             if (cake == null)
             {
                 return NotFound();

@@ -16,6 +16,6 @@ namespace ServiceLayer.Dto
         public string Allergens { get; set; } = string.Empty;
         public string Size { get; set; } = string.Empty;
         public string CustomMessage { get; set; } = string.Empty;
-        public int CategoryId { get; set; }
+        public CategoryDto? Category { get; set; }
     }
 }

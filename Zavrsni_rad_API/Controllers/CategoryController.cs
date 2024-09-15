@@ -41,15 +41,16 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto updatedCategory)
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDto updatedCategory)
         {
-            if (id != updatedCategory.Id)
+            if (updatedCategory.Id <= 0)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
             }
 
-            var category = await _categoryService.GetCategoryAsync(id);
+            var category = await _categoryService.GetCategoryAsync(updatedCategory.Id);
             if (category == null)
             {
                 return NotFound();

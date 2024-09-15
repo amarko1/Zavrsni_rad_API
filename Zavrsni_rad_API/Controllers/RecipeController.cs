@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
+using ServiceLayer.Services.Implementation;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -41,12 +42,17 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetRecipe), new { id = recipeDto.Id }, recipeDto);
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] RecipeDto recipeDto)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateRecipe([FromBody] RecipeDto recipeDto)
         {
-            if (id != recipeDto.Id)
+            if (recipeDto.Id <= 0)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
+            }
+            var recipe = await _recipeService.GetRecipeByIdAsync(recipeDto.Id);
+            if (recipe == null)
+            {
+                return NotFound();
             }
             await _recipeService.UpdateRecipeAsync(recipeDto);
             return NoContent();

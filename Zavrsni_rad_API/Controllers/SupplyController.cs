@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
+using ServiceLayer.Services.Implementation;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -41,12 +42,17 @@ namespace Zavrsni_rad_API.Controllers
             return CreatedAtAction(nameof(GetSupply), new { id = supplyDto.Id }, supplyDto);
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSupply(int id, [FromBody] SupplyDto supplyDto)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateSupply([FromBody] SupplyDto supplyDto)
         {
-            if (id != supplyDto.Id)
+            if (supplyDto.Id <= 0)
             {
-                return BadRequest();
+                return BadRequest("Invalid ID.");
+            }
+            var supply = await _supplyService.GetSupplyByIdAsync(supplyDto.Id);
+            if (supply == null)
+            {
+                return NotFound();
             }
             await _supplyService.UpdateSupplyAsync(supplyDto);
             return NoContent();
