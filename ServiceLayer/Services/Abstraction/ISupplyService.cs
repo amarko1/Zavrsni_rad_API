@@ -1,4 +1,5 @@
 ﻿using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace ServiceLayer.Services.Abstraction
     {
         Task<IEnumerable<SupplyDto>> GetAllSuppliesAsync();
         Task<SupplyDto> GetSupplyByIdAsync(int id);
-        Task AddSupplyAsync(SupplyDto supplyDto);
-        Task UpdateSupplyAsync(SupplyDto supplyDto);
+        Task AddSupplyAsync(SupplyCreateRequest supplyDto);
+        Task UpdateSupplyAsync(SupplyCreateRequest supplyDto);
         Task DeleteSupplyAsync(int id);
     }
 

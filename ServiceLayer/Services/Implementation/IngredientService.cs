@@ -44,9 +44,20 @@ namespace ServiceLayer.Services.Implementation
 
         public async Task UpdateIngredientAsync(IngredientDto ingredientDto)
         {
-            var ingredient = _mapper.Map<Ingredient>(ingredientDto);
-            await _ingredientRepository.UpdateIngredientAsync(ingredient);
+            var ingredient = await _ingredientRepository.GetIngredientByIdAsync(ingredientDto.Id);
+
+            if (ingredient != null)
+            {
+                ingredient.Name = ingredientDto.Name;
+                ingredient.Supplier = ingredientDto.Supplier;
+                ingredient.Measurement = ingredientDto.Measurement;
+                ingredient.PurchaseSize = ingredientDto.PurchaseSize;
+                ingredient.CostPrice = ingredientDto.CostPrice;
+
+                await _ingredientRepository.UpdateIngredientAsync(ingredient);
+            }
         }
+
 
         public async Task DeleteIngredientAsync(int id)
         {

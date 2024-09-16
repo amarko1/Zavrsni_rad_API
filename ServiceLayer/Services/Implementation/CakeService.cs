@@ -2,6 +2,8 @@
 using DAL.Models;
 using DAL.Repositories.Abstraction;
 using ServiceLayer.Dto;
+using ServiceLayer.ImageUtils;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 
 public class CakeService : ICakeService
@@ -27,29 +29,45 @@ public class CakeService : ICakeService
         return _mapper.Map<CakeDto>(cake);
     }
 
-    public async Task<CakeDto> CreateCakeAsync(CakeDto newCakeDto)
+    public async Task CreateCakeAsync(CakeUpdateRequest newCakeDto)
     {
         var newCake = _mapper.Map<Cake>(newCakeDto);
 
-        if (!string.IsNullOrEmpty(newCakeDto.ImageContent))
-        {
-            newCake.ImageContent = newCakeDto.ImageContent;
-        }
+        var imageAsStream = ImageUtils.GetFileAsMemoryStream(newCakeDto.ImageContent);
+        var imageContent = Convert.ToBase64String(imageAsStream!);
 
-        await _cakeRepository.CreateCakeAsync(newCake);
-        return _mapper.Map<CakeDto>(newCake);
+        await _cakeRepository.CreateCakeAsync(new Cake()
+        {
+            Allergens = newCake.Allergens,
+            ImageContent = imageContent,
+            CategoryId = newCake.CategoryId,
+            Name = newCake.Name,
+            Price = newCake.Price,
+            Size = newCake.Size,
+            CustomMessage = newCake.CustomMessage,
+            Description = newCake.Description
+        });
     }
 
-    public async Task UpdateCakeAsync(CakeDto updatedCakeDto)
+    public async Task UpdateCakeAsync(CakeUpdateRequest updatedCakeDto)
     {
         var updatedCake = _mapper.Map<Cake>(updatedCakeDto);
 
-        if (!string.IsNullOrEmpty(updatedCakeDto.ImageContent))
-        {
-            updatedCake.ImageContent = updatedCakeDto.ImageContent;
-        }
+        var imageAsStream = ImageUtils.GetFileAsMemoryStream(updatedCakeDto.ImageContent);
+        var imageContent = Convert.ToBase64String(imageAsStream!);
 
-        await _cakeRepository.UpdateCakeAsync(updatedCake);
+        await _cakeRepository.UpdateCakeAsync(new Cake()
+        {
+            Id = updatedCake.Id,
+            Allergens = updatedCake.Allergens,
+            ImageContent = imageContent,
+            CategoryId = updatedCake.CategoryId,
+            Name = updatedCake.Name,
+            Price = updatedCake.Price,
+            Size = updatedCake.Size,
+            CustomMessage = updatedCake.CustomMessage,
+            Description = updatedCake.Description
+        });
     }
 
     public async Task DeleteCakeAsync(int id)

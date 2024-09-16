@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 
 namespace Zavrsni_rad_API.Controllers
@@ -35,14 +36,14 @@ namespace Zavrsni_rad_API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateCake([FromBody] CakeDto newCake)
+        public async Task<IActionResult> CreateCake([FromForm] CakeUpdateRequest newCake)
         {
-            var createdCake = await _cakeService.CreateCakeAsync(newCake);
-            return CreatedAtAction(nameof(GetCake), new { id = createdCake.Id }, createdCake);
+            await _cakeService.CreateCakeAsync(newCake);
+            return CreatedAtAction(nameof(GetCake), new { id = newCake.Id }, newCake);
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateCake([FromBody] CakeDto updatedCake)
+        public async Task<IActionResult> UpdateCake([FromForm] CakeUpdateRequest updatedCake)
         {
             if (updatedCake.Id <= 0)
             {

@@ -1,4 +1,5 @@
 ﻿using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace ServiceLayer.Services.Abstraction
     {
         Task<IEnumerable<CakeDto>> GetAllCakesAsync();
         Task<CakeDto?> GetCakeAsync(int id);
-        Task<CakeDto> CreateCakeAsync(CakeDto newCake);
-        Task UpdateCakeAsync(CakeDto updatedCake);
+        Task CreateCakeAsync(CakeUpdateRequest newCake);
+        Task UpdateCakeAsync(CakeUpdateRequest updatedCake);
         Task DeleteCakeAsync(int id);
         Task<string?> GetImageContentAsync(int id);
     }

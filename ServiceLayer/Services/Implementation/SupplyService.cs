@@ -3,6 +3,7 @@ using DAL.Models;
 using DAL.Repositories.Abstraction;
 using DAL.Repositories.Implementation;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 using System;
 using System.Collections.Generic;
@@ -35,16 +36,25 @@ namespace ServiceLayer.Services.Implementation
             return _mapper.Map<SupplyDto>(supply);
         }
 
-        public async Task AddSupplyAsync(SupplyDto supplyDto)
+        public async Task AddSupplyAsync(SupplyCreateRequest supplyDto)
         {
             var supply = _mapper.Map<Supply>(supplyDto);
             await _supplyRepository.AddSupplyAsync(supply);
         }
 
-        public async Task UpdateSupplyAsync(SupplyDto supplyDto)
+        public async Task UpdateSupplyAsync(SupplyCreateRequest supplyDto)
         {
-            var supply = _mapper.Map<Supply>(supplyDto);
-            await _supplyRepository.UpdateSupplyAsync(supply);
+            var supply = await _supplyRepository.GetSupplyByIdAsync(supplyDto.Id);
+
+            if (supply != null)
+            {
+                supply.Name = supplyDto.Name;
+                supply.Supplier = supplyDto.Supplier;
+                supply.CategoryId = supplyDto.CategoryId;
+                supply.CostPrice = supplyDto.CostPrice;
+
+                await _supplyRepository.UpdateSupplyAsync(supply);
+            }
         }
 
         public async Task DeleteSupplyAsync(int id)

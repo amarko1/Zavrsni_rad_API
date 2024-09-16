@@ -37,12 +37,18 @@ namespace DAL.Repositories.Implementation
 
         public async Task<IEnumerable<Supply>> GetAllSuppliesAsync()
         {
-            return await _context.Supplies.ToListAsync();
+            return await _context.Supplies
+                .OfType<Supply>()
+                .Include(c => c.Category)
+                .ToListAsync();
         }
 
         public async Task<Supply> GetSupplyByIdAsync(int id)
         {
-            return await _context.Supplies.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Supplies
+                .OfType<Supply>()
+                .Include(c => c.Category)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task UpdateSupplyAsync(Supply supply)

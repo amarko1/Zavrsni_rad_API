@@ -13,7 +13,7 @@ namespace DAL.Models
         public string Name { get; set; } = string.Empty;
         public double Price { get; set; }
         public string Description { get; set; } = string.Empty;
-        public string ImageContent { get; set; } = string.Empty;
+        public string ImageContent { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int CategoryId { get; set; }

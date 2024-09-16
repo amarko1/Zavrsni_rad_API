@@ -11,6 +11,7 @@ namespace ServiceLayer.Dto
         public int Id { get; set; }
         public string Name { get; set; }
         public string Supplier { get; set; }
+        public string Measurement { get; set; }
         public string PurchaseSize { get; set; }
         public decimal CostPrice { get; set; }
     }

@@ -1,22 +1,23 @@
 ﻿using Microsoft.AspNetCore.Http;
+using ServiceLayer.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.Dto
+namespace ServiceLayer.ServiceModels
 {
-    public class CakeDto
+    public class CakeUpdateRequest
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public double Price { get; set; }
         public string Description { get; set; } = string.Empty;
-        public string? ImageContent { get; set; }
+        public IFormFile ImageContent { get; set; }
         public string Allergens { get; set; } = string.Empty;
         public string Size { get; set; } = string.Empty;
         public string CustomMessage { get; set; } = string.Empty;
-        public CategoryDto? Category { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

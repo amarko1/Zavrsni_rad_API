@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace ServiceLayer.Dto
         public int Id { get; set; }
         public string Name { get; set; }
         public string Supplier { get; set; }
-        public int CategoryId { get; set; }
+        public CategoryDto? Category { get; set; }
         public decimal CostPrice { get; set; }
     }
 
