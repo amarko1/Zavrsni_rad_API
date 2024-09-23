@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
 using ServiceLayer.Services.Implementation;
+using ServiceLayer.ServiceModels;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -36,27 +37,28 @@ namespace Zavrsni_rad_API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateRecipe([FromBody] RecipeDto recipeDto)
+        public async Task<IActionResult> CreateRecipe([FromBody] RecipeCreateRequest recipeCreateRequest)
         {
-            await _recipeService.AddRecipeAsync(recipeDto);
-            return CreatedAtAction(nameof(GetRecipe), new { id = recipeDto.Id }, recipeDto);
+            await _recipeService.AddRecipeAsync(recipeCreateRequest);
+            return CreatedAtAction(nameof(GetRecipe), new { id = recipeCreateRequest.Id }, recipeCreateRequest);
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateRecipe([FromBody] RecipeDto recipeDto)
+        public async Task<IActionResult> UpdateRecipe([FromBody] RecipeCreateRequest recipeCreateRequest)
         {
-            if (recipeDto.Id <= 0)
+            if (recipeCreateRequest.Id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
-            var recipe = await _recipeService.GetRecipeByIdAsync(recipeDto.Id);
+            var recipe = await _recipeService.GetRecipeByIdAsync(recipeCreateRequest.Id);
             if (recipe == null)
             {
                 return NotFound();
             }
-            await _recipeService.UpdateRecipeAsync(recipeDto);
+            await _recipeService.UpdateRecipeAsync(recipeCreateRequest);
             return NoContent();
         }
+
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using ServiceLayer.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceLayer.Dto
+namespace ServiceLayer.ServiceModels
 {
-    public class RecipeDto
+    public class RecipeCreateRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,11 +17,11 @@ namespace ServiceLayer.Dto
         public string RecipeDirections { get; set; }
         public string StorageInformation { get; set; }
         public List<string> Allergens { get; set; }
-        public CategoryDto? Category { get; set; }
-        public List<RecipeIngredientDto> RecipeIngredients { get; set; }
+        public int? CategoryId { get; set; }
+        public List<RecipeIngredientRequest> RecipeIngredients { get; set; }
     }
 
-    public class RecipeIngredientDto
+    public class RecipeIngredientRequest
     {
         public int IngredientId { get; set; }
         public decimal Quantity { get; set; }

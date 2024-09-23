@@ -4,6 +4,7 @@ using DAL.Models;
 using DAL.Repositories.Abstraction;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 using System;
 using System.Collections.Generic;
@@ -37,22 +38,18 @@ namespace ServiceLayer.Services.Implementation
             return _mapper.Map<RecipeDto>(recipe);
         }
 
-        public async Task AddRecipeAsync(RecipeDto recipeDto)
+        public async Task AddRecipeAsync(RecipeCreateRequest recipeCreateRequest)
         {
-            var categoryExists = await _context.Categories.AnyAsync(c => c.Id == recipeDto.CategoryId);
-            if (!categoryExists)
-            {
-                throw new ArgumentException("Category does not exist.");
-            }
-            var recipe = _mapper.Map<Recipe>(recipeDto);
+            var recipe = _mapper.Map<Recipe>(recipeCreateRequest);
             await _recipeRepository.AddRecipeAsync(recipe);
         }
 
-        public async Task UpdateRecipeAsync(RecipeDto recipeDto)
+        public async Task UpdateRecipeAsync(RecipeCreateRequest recipeCreateRequest)
         {
-            var recipe = _mapper.Map<Recipe>(recipeDto);
+            var recipe = _mapper.Map<Recipe>(recipeCreateRequest);
             await _recipeRepository.UpdateRecipeAsync(recipe);
         }
+
 
         public async Task DeleteRecipeAsync(int id)
         {

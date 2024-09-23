@@ -23,6 +23,7 @@ namespace DAL.Repositories.Implementation
         {
             return await _context.Recipes
                 .Include(r => r.RecipeIngredients)
+                .Include(r => r.Category)
                 .ToListAsync();
         }
 
@@ -30,22 +31,55 @@ namespace DAL.Repositories.Implementation
         {
             return await _context.Recipes
                 .Include(r => r.RecipeIngredients)
+                .Include(r => r.Category)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task AddRecipeAsync(Recipe recipe)
         {
             recipe.CreatedAt = DateTime.Now;
+
+            // Dodaj recept i povezane sastojke
             await _context.Recipes.AddAsync(recipe);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateRecipeAsync(Recipe recipe)
         {
-            recipe.UpdatedAt = DateTime.Now;
-            _context.Recipes.Update(recipe);
-            await _context.SaveChangesAsync();
+            var existingRecipe = await _context.Recipes
+                .Include(r => r.RecipeIngredients)
+                .FirstOrDefaultAsync(r => r.Id == recipe.Id);
+
+            if (existingRecipe != null)
+            {
+                // Ažuriraj polja recepta
+                existingRecipe.Name = recipe.Name;
+                existingRecipe.Description = recipe.Description;
+                existingRecipe.Servings = recipe.Servings;
+                existingRecipe.CostPrice = recipe.CostPrice;
+                existingRecipe.RecipeDirections = recipe.RecipeDirections;
+                existingRecipe.StorageInformation = recipe.StorageInformation;
+                existingRecipe.Allergens = recipe.Allergens;
+                existingRecipe.CategoryId = recipe.CategoryId;
+                existingRecipe.UpdatedAt = DateTime.Now;
+
+                // Očisti trenutne sastojke
+                _context.RecipeIngredients.RemoveRange(existingRecipe.RecipeIngredients);
+
+                // Dodaj nove sastojke
+                foreach (var ingredient in recipe.RecipeIngredients)
+                {
+                    existingRecipe.RecipeIngredients.Add(new RecipeIngredient
+                    {
+                        IngredientId = ingredient.IngredientId,
+                        Quantity = ingredient.Quantity
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+            }
         }
+
 
         public async Task DeleteRecipeAsync(int id)
         {

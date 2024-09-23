@@ -15,9 +15,10 @@ namespace DAL.Models
         public int Servings { get; set; }
         public decimal CostPrice { get; set; }
         public string RecipeDirections { get; set; }
-        public string Allergens { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string StorageInformation { get; set; }
+        public List<string> Allergens { get; set; }
         public List<RecipeIngredient> RecipeIngredients { get; set; }
         public Category Category { get; set; }
     }

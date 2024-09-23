@@ -1,4 +1,5 @@
 ﻿using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace ServiceLayer.Services.Abstraction
     {
         Task<IEnumerable<RecipeDto>> GetAllRecipesAsync();
         Task<RecipeDto> GetRecipeByIdAsync(int id);
-        Task AddRecipeAsync(RecipeDto recipeDto);
-        Task UpdateRecipeAsync(RecipeDto recipeDto);
+        Task AddRecipeAsync(RecipeCreateRequest recipeDto);
+        Task UpdateRecipeAsync(RecipeCreateRequest recipeDto);
         Task DeleteRecipeAsync(int id);
     }
 
