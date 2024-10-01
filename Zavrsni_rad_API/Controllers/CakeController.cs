@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
+using ServiceLayer.Services.Implementation;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -17,14 +18,14 @@ namespace Zavrsni_rad_API.Controllers
             _cakeService = cakeService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("GetAllCakes")]
         public async Task<IActionResult> GetAllCakes()
         {
             var cakes = await _cakeService.GetAllCakesAsync();
             return Ok(cakes);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("GetCake/{id}")]
         public async Task<IActionResult> GetCake(int id)
         {
             var cake = await _cakeService.GetCakeAsync(id);
@@ -35,32 +36,46 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(cake);
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreateCake")]
         public async Task<IActionResult> CreateCake([FromForm] CakeUpdateRequest newCake)
         {
-            await _cakeService.CreateCakeAsync(newCake);
-            return CreatedAtAction(nameof(GetCake), new { id = newCake.Id }, newCake);
+            try
+            {
+                await _cakeService.CreateCakeAsync(newCake);
+                return CreatedAtAction(nameof(GetCake), new { id = newCake.Id }, newCake);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
-        [HttpPost("update")]
+        [HttpPost("UpdateCake")]
         public async Task<IActionResult> UpdateCake([FromForm] CakeUpdateRequest updatedCake)
         {
-            if (updatedCake.Id <= 0)
+            try
             {
-                return BadRequest("Invalid ID.");
-            }
+                if (updatedCake.Id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
 
-            var cake = await _cakeService.GetCakeAsync(updatedCake.Id);
-            if (cake == null)
+                var cake = await _cakeService.GetCakeAsync(updatedCake.Id);
+                if (cake == null)
+                {
+                    return NotFound();
+                }
+
+                await _cakeService.UpdateCakeAsync(updatedCake);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return Conflict(new { message = ex.Message });
             }
-
-            await _cakeService.UpdateCakeAsync(updatedCake);
-            return NoContent();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("DeleteCake/{id}")]
         public async Task<IActionResult> DeleteCake(int id)
         {
             var cake = await _cakeService.GetCakeAsync(id);
@@ -73,7 +88,7 @@ namespace Zavrsni_rad_API.Controllers
             return NoContent();
         }
 
-        [HttpGet("getImage/{id}")]
+        [HttpGet("GetImage/{id}")]
         public async Task<IActionResult> GetCakeImage(int id)
         {
             var imageContent = await _cakeService.GetImageContentAsync(id);

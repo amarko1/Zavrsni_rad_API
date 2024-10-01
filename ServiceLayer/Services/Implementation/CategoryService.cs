@@ -37,38 +37,28 @@ namespace ServiceLayer.Services.Implementation
 
         public async Task<CategoryDto> CreateCategoryAsync(CategoryDto newCategoryDto)
         {
-            var newCategory = _mapper.Map<Category>(newCategoryDto);
-
-            if (!string.IsNullOrEmpty(newCategoryDto.ImageContent))
+            if (_categoryRepository.CheckIfCategoryNameExists(newCategoryDto.Name))
             {
-                newCategory.ImageContent = newCategoryDto.ImageContent;
+                throw new InvalidOperationException("Category with the same name already exists.");
             }
-
+            var newCategory = _mapper.Map<Category>(newCategoryDto);
             await _categoryRepository.CreateCategoryAsync(newCategory);
             return _mapper.Map<CategoryDto>(newCategory);
         }
 
         public async Task UpdateCategoryAsync(CategoryDto updatedCategoryDto)
         {
-            var updatedCategory = _mapper.Map<Category>(updatedCategoryDto);
-
-            if (!string.IsNullOrEmpty(updatedCategoryDto.ImageContent))
+            if (_categoryRepository.CheckIfCategoryNameExists(updatedCategoryDto.Name, updatedCategoryDto.Id))
             {
-                updatedCategory.ImageContent = updatedCategoryDto.ImageContent;
+                throw new InvalidOperationException("Category with the same name already exists.");
             }
-
+            var updatedCategory = _mapper.Map<Category>(updatedCategoryDto);
             await _categoryRepository.UpdateCategoryAsync(updatedCategory);
         }
 
         public async Task DeleteCategoryAsync(int id)
         {
             await _categoryRepository.DeleteCategoryAsync(id);
-        }
-
-        public async Task<string?> GetImageContentAsync(int id)
-        {
-            var category = await _categoryRepository.GetCategoryAsync(id);
-            return category?.ImageContent;
         }
     }
 }

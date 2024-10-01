@@ -53,5 +53,17 @@ namespace DAL.Repositories.Implementation
             _context.Ingredients.Update(ingredient);
             await _context.SaveChangesAsync();
         }
+
+        public bool CheckIfIngredientNameExists(string name, int? currentId = null)
+        {
+            if (currentId.HasValue)
+            {
+                return _context.Ingredients.Any(s => s.Name == name && s.Id != currentId);
+            }
+            else
+            {
+                return _context.Ingredients.Any(s => s.Name == name);
+            }
+        }
     }
 }

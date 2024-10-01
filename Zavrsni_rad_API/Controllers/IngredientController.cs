@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 using ServiceLayer.Services.Implementation;
 
@@ -17,14 +18,14 @@ namespace Zavrsni_rad_API.Controllers
             _ingredientService = ingredientService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("GetAllIngredients")]
         public async Task<IActionResult> GetAllIngredients()
         {
             var ingredients = await _ingredientService.GetAllIngredientsAsync();
             return Ok(ingredients);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("GetIngredient/{id}")]
         public async Task<IActionResult> GetIngredient(int id)
         {
             var ingredient = await _ingredientService.GetIngredientByIdAsync(id);
@@ -35,30 +36,44 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(ingredient);
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreateIngredient")]
         public async Task<IActionResult> CreateIngredient([FromBody] IngredientDto ingredientDto)
         {
-            await _ingredientService.AddIngredientAsync(ingredientDto);
-            return CreatedAtAction(nameof(GetIngredient), new { id = ingredientDto.Id }, ingredientDto);
+            try
+            {
+                await _ingredientService.AddIngredientAsync(ingredientDto);
+                return CreatedAtAction(nameof(GetIngredient), new { id = ingredientDto.Id }, ingredientDto);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
-        [HttpPost("update")]
+        [HttpPost("UpdateIngredient")]
         public async Task<IActionResult> UpdateIngredient([FromBody] IngredientDto ingredientDto)
         {
-            if (ingredientDto.Id <= 0)
+            try
             {
-                return BadRequest("Invalid ID.");
+                if (ingredientDto.Id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
+                var ingredient = await _ingredientService.GetIngredientByIdAsync(ingredientDto.Id);
+                if (ingredient == null)
+                {
+                    return NotFound();
+                }
+                await _ingredientService.UpdateIngredientAsync(ingredientDto);
+                return NoContent();
             }
-            var ingredient = await _ingredientService.GetIngredientByIdAsync(ingredientDto.Id);
-            if (ingredient == null)
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return Conflict(new { message = ex.Message });
             }
-            await _ingredientService.UpdateIngredientAsync(ingredientDto);
-            return NoContent();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("DeleteIngredient/{id}")]
         public async Task<IActionResult> DeleteIngredient(int id)
         {
             await _ingredientService.DeleteIngredientAsync(id);

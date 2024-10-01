@@ -90,6 +90,17 @@ namespace DAL.Repositories.Implementation
                 await _context.SaveChangesAsync();
             }
         }
-    }
 
+        public bool CheckIfRecipeNameExists(string name, int? currentId = null)
+        {
+            if (currentId.HasValue)
+            {
+                return _context.Recipes.Any(s => s.Name == name && s.Id != currentId);
+            }
+            else
+            {
+                return _context.Recipes.Any(s => s.Name == name);
+            }
+        }
+    }
 }

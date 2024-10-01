@@ -18,14 +18,14 @@ namespace Zavrsni_rad_API.Controllers
             _recipeService = recipeService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("GetAllRecipes")]
         public async Task<IActionResult> GetAllRecipes()
         {
             var recipes = await _recipeService.GetAllRecipesAsync();
             return Ok(recipes);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("GetRecipe/{id}")]
         public async Task<IActionResult> GetRecipe(int id)
         {
             var recipe = await _recipeService.GetRecipeByIdAsync(id);
@@ -36,31 +36,45 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(recipe);
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreateRecipe")]
         public async Task<IActionResult> CreateRecipe([FromBody] RecipeCreateRequest recipeCreateRequest)
         {
-            await _recipeService.AddRecipeAsync(recipeCreateRequest);
-            return CreatedAtAction(nameof(GetRecipe), new { id = recipeCreateRequest.Id }, recipeCreateRequest);
+            try
+            {
+                await _recipeService.AddRecipeAsync(recipeCreateRequest);
+                return CreatedAtAction(nameof(GetRecipe), new { id = recipeCreateRequest.Id }, recipeCreateRequest);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
-        [HttpPost("update")]
+        [HttpPost("UpdateRecipe")]
         public async Task<IActionResult> UpdateRecipe([FromBody] RecipeCreateRequest recipeCreateRequest)
         {
-            if (recipeCreateRequest.Id <= 0)
+            try
             {
-                return BadRequest("Invalid ID.");
+                if (recipeCreateRequest.Id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
+                var recipe = await _recipeService.GetRecipeByIdAsync(recipeCreateRequest.Id);
+                if (recipe == null)
+                {
+                    return NotFound();
+                }
+                await _recipeService.UpdateRecipeAsync(recipeCreateRequest);
+                return NoContent();
             }
-            var recipe = await _recipeService.GetRecipeByIdAsync(recipeCreateRequest.Id);
-            if (recipe == null)
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return Conflict(new { message = ex.Message });
             }
-            await _recipeService.UpdateRecipeAsync(recipeCreateRequest);
-            return NoContent();
         }
 
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("DeleteRecipe/{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
             await _recipeService.DeleteRecipeAsync(id);

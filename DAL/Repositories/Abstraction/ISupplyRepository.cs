@@ -14,5 +14,6 @@ namespace DAL.Repositories.Abstraction
         Task AddSupplyAsync(Supply supply);
         Task UpdateSupplyAsync(Supply supply);
         Task DeleteSupplyAsync(int id);
+        bool CheckIfSupplyNameExists(string name, int? currentId = null);
     }
 }

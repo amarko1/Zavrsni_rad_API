@@ -22,23 +22,23 @@ namespace DAL.Repositories.Implementation
         public async Task CreateCakeAsync(Cake newCake)
         {
             newCake.CreatedAt = DateTime.Now;
-            await _context.Cakes.AddAsync(newCake); 
+            await _context.Cakes.AddAsync(newCake);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Cake?> GetCakeAsync(int id)
         {
             return await _context.Cakes
-                .OfType<Cake>() 
-                .Include(c => c.Category) 
+                .OfType<Cake>()
+                .Include(c => c.Category)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Cake>> GetAllCakesAsync()
         {
             return await _context.Cakes
-                .OfType<Cake>() 
-                .Include(c => c.Category) 
+                .OfType<Cake>()
+                .Include(c => c.Category)
                 .ToListAsync();
         }
 
@@ -75,6 +75,18 @@ namespace DAL.Repositories.Implementation
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public bool CheckIfCakeNameExists(string name, int? currentId = null)
+        {
+            if (currentId.HasValue)
+            {
+                return _context.Cakes.Any(s => s.Name == name && s.Id != currentId);
+            }
+            else
+            {
+                return _context.Cakes.Any(s => s.Name == name);
+            }
         }
     }
 

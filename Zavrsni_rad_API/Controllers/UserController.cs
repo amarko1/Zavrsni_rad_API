@@ -16,28 +16,28 @@ namespace Zavrsni_rad_API.Controllers
             _userService = userService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public IActionResult Register([FromBody] UserRegistrationRequest registerRequest)
         {
             var response = _userService.Register(registerRequest);
             return response.IsSuccessful ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
             var response = _userService.Login(loginRequest);
             return response.IsSuccessful ? Ok(response) : Unauthorized(response);
         }
 
-        [HttpPost("refresh")]
+        [HttpPost("RefreshToken")]
         public IActionResult RefreshExpiredToken([FromBody] RefreshRequest refreshRequest)
         {
             var response = _userService.RefreshToken(refreshRequest);
             return response.IsSuccessful ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPost("logout")]
+        [HttpPost("Logout")]
         public IActionResult Logout([FromBody] string userEmail)
         {
             var response = _userService.Logout(userEmail);

@@ -2,8 +2,10 @@
 using DAL.AppDbContext;
 using DAL.Models;
 using DAL.Repositories.Abstraction;
+using DAL.Repositories.Implementation;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,10 @@ namespace ServiceLayer.Services.Implementation
 
         public async Task AddIngredientAsync(IngredientDto ingredientDto)
         {
+            if (_ingredientRepository.CheckIfIngredientNameExists(ingredientDto.Name))
+            {
+                throw new InvalidOperationException("Ingredient with the same name already exists.");
+            }
             var ingredient = _mapper.Map<Ingredient>(ingredientDto);
             await _ingredientRepository.AddIngredientAsync(ingredient);
         }
@@ -48,6 +54,10 @@ namespace ServiceLayer.Services.Implementation
 
             if (ingredient != null)
             {
+                if (_ingredientRepository.CheckIfIngredientNameExists(ingredientDto.Name, ingredientDto.Id))
+                {
+                    throw new InvalidOperationException("Ingredient with the same name already exists.");
+                }
                 ingredient.Name = ingredientDto.Name;
                 ingredient.Supplier = ingredientDto.Supplier;
                 ingredient.Measurement = ingredientDto.Measurement;

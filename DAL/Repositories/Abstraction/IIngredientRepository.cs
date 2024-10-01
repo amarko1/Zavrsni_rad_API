@@ -14,5 +14,6 @@ namespace DAL.Repositories.Abstraction
         Task AddIngredientAsync(Ingredient ingredient);
         Task UpdateIngredientAsync(Ingredient ingredient);
         Task DeleteIngredientAsync(int id);
+        bool CheckIfIngredientNameExists(string name, int? currentId = null);
     }
 }

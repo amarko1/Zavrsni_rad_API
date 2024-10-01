@@ -14,6 +14,7 @@ namespace DAL.Repositories.Abstraction
         Task AddRecipeAsync(Recipe recipe);
         Task UpdateRecipeAsync(Recipe recipe);
         Task DeleteRecipeAsync(int id);
+        bool CheckIfRecipeNameExists(string name, int? currentId = null);
     }
 
 }

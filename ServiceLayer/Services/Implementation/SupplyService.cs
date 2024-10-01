@@ -38,6 +38,10 @@ namespace ServiceLayer.Services.Implementation
 
         public async Task AddSupplyAsync(SupplyCreateRequest supplyDto)
         {
+            if (_supplyRepository.CheckIfSupplyNameExists(supplyDto.Name))
+            {
+                throw new InvalidOperationException("Supply with the same name already exists.");
+            }
             var supply = _mapper.Map<Supply>(supplyDto);
             await _supplyRepository.AddSupplyAsync(supply);
         }
@@ -48,6 +52,11 @@ namespace ServiceLayer.Services.Implementation
 
             if (supply != null)
             {
+                if (_supplyRepository.CheckIfSupplyNameExists(supplyDto.Name, supplyDto.Id))
+                {
+                    throw new InvalidOperationException("Supply with the same name already exists.");
+                }
+
                 supply.Name = supplyDto.Name;
                 supply.Supplier = supplyDto.Supplier;
                 supply.CategoryId = supplyDto.CategoryId;

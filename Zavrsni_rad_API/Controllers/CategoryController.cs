@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
+using ServiceLayer.Services.Implementation;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -16,14 +17,14 @@ namespace Zavrsni_rad_API.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("GetAllCategories")]
         public async Task<IActionResult> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
             return Ok(categories);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("GetCategory/{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             var category = await _categoryService.GetCategoryAsync(id);
@@ -34,33 +35,47 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(category);
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreateCategory")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto newCategory)
         {
-            var createdCategory = await _categoryService.CreateCategoryAsync(newCategory);
-            return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
+            try
+            {
+                var createdCategory = await _categoryService.CreateCategoryAsync(newCategory);
+                return CreatedAtAction(nameof(GetCategory), new { id = createdCategory.Id }, createdCategory);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
 
-        [HttpPost("update")]
+        [HttpPost("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory([FromBody] CategoryDto updatedCategory)
         {
-            if (updatedCategory.Id <= 0)
+            try
             {
-                return BadRequest("Invalid ID.");
-            }
+                if (updatedCategory.Id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
 
-            var category = await _categoryService.GetCategoryAsync(updatedCategory.Id);
-            if (category == null)
+                var category = await _categoryService.GetCategoryAsync(updatedCategory.Id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+
+                await _categoryService.UpdateCategoryAsync(updatedCategory);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return Conflict(new { message = ex.Message });
             }
-
-            await _categoryService.UpdateCategoryAsync(updatedCategory);
-            return NoContent();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("DeleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _categoryService.GetCategoryAsync(id);
@@ -71,17 +86,6 @@ namespace Zavrsni_rad_API.Controllers
 
             await _categoryService.DeleteCategoryAsync(id);
             return NoContent();
-        }
-
-        [HttpGet("getImage/{id}")]
-        public async Task<IActionResult> GetCategoryImage(int id)
-        {
-            var imageContent = await _categoryService.GetImageContentAsync(id);
-
-            if (imageContent == null) return NotFound();
-
-            var imageBytes = Convert.FromBase64String(imageContent);
-            return new FileContentResult(imageBytes, "application/octet-stream");
         }
     }
 

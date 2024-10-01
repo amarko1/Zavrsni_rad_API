@@ -15,5 +15,6 @@ namespace DAL.Repositories.Abstraction
         Task UpdateCategoryAsync(Category updatedCategory);
         Task DeleteCategoryAsync(int id);
         Task SaveAsync();
+        bool CheckIfCategoryNameExists(string name, int? currentId = null);
     }
 }

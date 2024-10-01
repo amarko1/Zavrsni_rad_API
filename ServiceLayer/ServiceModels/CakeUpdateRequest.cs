@@ -15,7 +15,7 @@ namespace ServiceLayer.ServiceModels
         public double Price { get; set; }
         public string Description { get; set; } = string.Empty;
         public IFormFile ImageContent { get; set; }
-        public string Allergens { get; set; } = string.Empty;
+        public List<string> Allergens { get; set; }
         public string Size { get; set; } = string.Empty;
         public string CustomMessage { get; set; } = string.Empty;
         public int? CategoryId { get; set; }

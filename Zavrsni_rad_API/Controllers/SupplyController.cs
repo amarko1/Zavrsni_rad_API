@@ -18,14 +18,14 @@ namespace Zavrsni_rad_API.Controllers
             _supplyService = supplyService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("GetAllSupplies")]
         public async Task<IActionResult> GetAllSupplies()
         {
             var supplies = await _supplyService.GetAllSuppliesAsync();
             return Ok(supplies);
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("GetSupply/{id}")]
         public async Task<IActionResult> GetSupply(int id)
         {
             var supply = await _supplyService.GetSupplyByIdAsync(id);
@@ -36,30 +36,44 @@ namespace Zavrsni_rad_API.Controllers
             return Ok(supply);
         }
 
-        [HttpPost("create")]
+        [HttpPost("CreateSupply")]
         public async Task<IActionResult> CreateSupply([FromBody] SupplyCreateRequest supplyDto)
         {
-            await _supplyService.AddSupplyAsync(supplyDto);
-            return CreatedAtAction(nameof(GetSupply), new { id = supplyDto.Id }, supplyDto);
+            try
+            {
+                await _supplyService.AddSupplyAsync(supplyDto);
+                return CreatedAtAction(nameof(GetSupply), new { id = supplyDto.Id }, supplyDto);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
-        [HttpPost("update")]
+        [HttpPost("UpdateSupply")]
         public async Task<IActionResult> UpdateSupply([FromBody] SupplyCreateRequest supplyDto)
         {
-            if (supplyDto.Id <= 0)
+            try
             {
-                return BadRequest("Invalid ID.");
+                if (supplyDto.Id <= 0)
+                {
+                    return BadRequest("Invalid ID.");
+                }
+                var supply = await _supplyService.GetSupplyByIdAsync(supplyDto.Id);
+                if (supply == null)
+                {
+                    return NotFound();
+                }
+                await _supplyService.UpdateSupplyAsync(supplyDto);
+                return NoContent();
             }
-            var supply = await _supplyService.GetSupplyByIdAsync(supplyDto.Id);
-            if (supply == null)
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return Conflict(new { message = ex.Message });
             }
-            await _supplyService.UpdateSupplyAsync(supplyDto);
-            return NoContent();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("DeleteSupply/{id}")]
         public async Task<IActionResult> DeleteSupply(int id)
         {
             await _supplyService.DeleteSupplyAsync(id);

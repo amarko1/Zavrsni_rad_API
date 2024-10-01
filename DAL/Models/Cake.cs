@@ -8,7 +8,7 @@ namespace DAL.Models
 {
     public class Cake : Product
     {
-        public string Allergens { get; set; } = string.Empty;
+        public List<string> Allergens { get; set; }
         public string Size { get; set; } = string.Empty;
         public string CustomMessage { get; set; } = string.Empty;
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Models;
 using DAL.Repositories.Abstraction;
+using DAL.Repositories.Implementation;
 using ServiceLayer.Dto;
 using ServiceLayer.ImageUtils;
 using ServiceLayer.ServiceModels;
@@ -31,6 +32,10 @@ public class CakeService : ICakeService
 
     public async Task CreateCakeAsync(CakeUpdateRequest newCakeDto)
     {
+        if (_cakeRepository.CheckIfCakeNameExists(newCakeDto.Name))
+        {
+            throw new InvalidOperationException("Cake with the same name already exists.");
+        }
         var newCake = _mapper.Map<Cake>(newCakeDto);
 
         var imageAsStream = ImageUtils.GetFileAsMemoryStream(newCakeDto.ImageContent);
@@ -51,6 +56,10 @@ public class CakeService : ICakeService
 
     public async Task UpdateCakeAsync(CakeUpdateRequest updatedCakeDto)
     {
+        if (_cakeRepository.CheckIfCakeNameExists(updatedCakeDto.Name, updatedCakeDto.Id))
+        {
+            throw new InvalidOperationException("Cake with the same name already exists.");
+        }
         var updatedCake = _mapper.Map<Cake>(updatedCakeDto);
 
         var imageAsStream = ImageUtils.GetFileAsMemoryStream(updatedCakeDto.ImageContent);

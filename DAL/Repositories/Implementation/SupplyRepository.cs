@@ -57,5 +57,19 @@ namespace DAL.Repositories.Implementation
             _context.Supplies.Update(supply);
             await _context.SaveChangesAsync();
         }
+
+        public bool CheckIfSupplyNameExists(string name, int? currentId = null)
+        {
+            if (currentId.HasValue)
+            {
+                // Provjera postojanja zapisa s istim imenom, ignoriraj trenutni zapis (ako se radi o updateu)
+                return _context.Supplies.Any(s => s.Name == name && s.Id != currentId);
+            }
+            else
+            {
+                // Provjera postojanja zapisa s istim imenom kod dodavanja (nema ID-a)
+                return _context.Supplies.Any(s => s.Name == name);
+            }
+        }
     }
 }

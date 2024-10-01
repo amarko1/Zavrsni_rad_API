@@ -15,6 +15,5 @@ namespace ServiceLayer.Services.Abstraction
         Task<CategoryDto> CreateCategoryAsync(CategoryDto newCategory);
         Task UpdateCategoryAsync(CategoryDto updatedCategory);
         Task DeleteCategoryAsync(int id);
-        Task<string?> GetImageContentAsync(int id);
     }
 }

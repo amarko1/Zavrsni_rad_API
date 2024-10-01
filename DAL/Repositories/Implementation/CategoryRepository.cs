@@ -42,7 +42,6 @@ namespace DAL.Repositories.Implementation
             if (category != null)
             {
                 category.Name = updatedCategory.Name;
-                category.ImageContent = updatedCategory.ImageContent;
                 category.Description = updatedCategory.Description;
                 category.UpdatedAt = DateTime.Now;
 
@@ -64,6 +63,18 @@ namespace DAL.Repositories.Implementation
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public bool CheckIfCategoryNameExists(string name, int? currentId = null)
+        {
+            if (currentId.HasValue)
+            {
+                return _context.Categories.Any(s => s.Name == name && s.Id != currentId);
+            }
+            else
+            {
+                return _context.Categories.Any(s => s.Name == name);
+            }
         }
     }
 
