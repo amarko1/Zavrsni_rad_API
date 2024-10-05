@@ -99,5 +99,4 @@ namespace Zavrsni_rad_API.Controllers
             return new FileContentResult(imageBytes, "application/octet-stream");
         }
     }
-
 }
