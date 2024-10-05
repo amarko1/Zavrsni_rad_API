@@ -9,7 +9,7 @@ namespace ServiceLayer.Services.Abstraction
 {
     public interface ITaskService
     {
-        Task<IEnumerable<TaskItemDto>> GetAllTasksAsync();
+        Task<IEnumerable<TaskItemDto>> GetTasksByUserIdAsync(int userId);
         Task<TaskItemDto?> GetTaskAsync(int id);
         Task CreateTaskAsync(TaskItemDto newTask);
         Task UpdateTaskAsync(TaskItemDto updatedTask);

@@ -16,14 +16,15 @@ namespace Zavrsni_rad_API.Controllers
             _taskService = taskService;
         }
 
-        [HttpGet("GetAllTasks")]
-        public async Task<IActionResult> GetAllTasks()
+        [HttpGet("GetTasksByUser/{userId}")]
+        public async Task<IActionResult> GetTasksByUser(int userId)
         {
-            var tasks = await _taskService.GetAllTasksAsync();
+            var tasks = await _taskService.GetTasksByUserIdAsync(userId);
             return Ok(tasks);
         }
 
         [HttpGet("GetTask/{id}")]
+        [NonAction]
         public async Task<IActionResult> GetTask(int id)
         {
             var task = await _taskService.GetTaskAsync(id);

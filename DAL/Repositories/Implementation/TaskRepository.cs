@@ -17,9 +17,9 @@ namespace DAL.Repositories.Implementation
         {
             _context = context;
         }
-        public async Task<IEnumerable<TaskItem>> GetAllTasksAsync()
+        public async Task<IEnumerable<TaskItem>> GetTasksByUserIdAsync(int userId)
         {
-            return await _context.TaskItems.ToListAsync();
+            return await _context.TaskItems.Where(t => t.AssignedUserId == userId).ToListAsync();
         }
         public async Task CreateTaskAsync(TaskItem newTask)
         {

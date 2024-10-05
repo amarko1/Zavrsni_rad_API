@@ -11,7 +11,7 @@ namespace DAL.Repositories.Abstraction
     {
         Task CreateTaskAsync(TaskItem newTask);
         Task<TaskItem?> GetTaskAsync(int id);
-        Task<IEnumerable<TaskItem>> GetAllTasksAsync();
+        Task<IEnumerable<TaskItem>> GetTasksByUserIdAsync(int userId);
         Task UpdateTaskAsync(TaskItem updatedTask);
         Task DeleteTaskAsync(int id);
     }

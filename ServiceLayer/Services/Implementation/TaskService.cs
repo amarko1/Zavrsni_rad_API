@@ -23,9 +23,9 @@ namespace ServiceLayer.Services.Implementation
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TaskItemDto>> GetAllTasksAsync()
+        public async Task<IEnumerable<TaskItemDto>> GetTasksByUserIdAsync(int userId)
         {
-            var tasks = await _taskRepository.GetAllTasksAsync();
+            var tasks = await _taskRepository.GetTasksByUserIdAsync(userId);
             return _mapper.Map<IEnumerable<TaskItemDto>>(tasks);
         }
 
