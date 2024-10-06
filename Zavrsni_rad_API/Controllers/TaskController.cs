@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
+using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
+using ServiceLayer.Services.Implementation;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -16,15 +18,21 @@ namespace Zavrsni_rad_API.Controllers
             _taskService = taskService;
         }
 
-        [HttpGet("GetTasksByUser/{userId}")]
-        public async Task<IActionResult> GetTasksByUser(int userId)
+        [HttpPost("GetTasksByUser")]
+        public async Task<IActionResult> GetTasksByUser([FromBody] int userId)
         {
             var tasks = await _taskService.GetTasksByUserIdAsync(userId);
             return Ok(tasks);
         }
 
+        [HttpGet("GetAllTasks")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var categories = await _taskService.GetAllTasksAsync();
+            return Ok(categories);
+        }
+
         [HttpGet("GetTask/{id}")]
-        [NonAction]
         public async Task<IActionResult> GetTask(int id)
         {
             var task = await _taskService.GetTaskAsync(id);
@@ -39,7 +47,7 @@ namespace Zavrsni_rad_API.Controllers
         public async Task<IActionResult> CreateTask([FromBody] TaskItemDto newTask)
         {
             await _taskService.CreateTaskAsync(newTask);
-            return CreatedAtAction(nameof(GetTask), new { id = newTask.Id }, newTask);
+            return Created("", newTask);
         }
 
         [HttpPost("UpdateTask")]
@@ -66,5 +74,20 @@ namespace Zavrsni_rad_API.Controllers
             await _taskService.DeleteTaskAsync(id);
             return NoContent();
         }
+
+        [HttpPost("ChangeCompletionStatus")]
+        public async Task<IActionResult> ChangeCompletionStatus([FromBody] TaskCompletionStatusRequest request)
+        {
+            var task = await _taskService.GetTaskAsync(request.Id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            await _taskService.UpdateTaskCompletionStatusAsync(request.Id, request.IsCompleted);
+
+            return NoContent();
+        }
+
     }
 }

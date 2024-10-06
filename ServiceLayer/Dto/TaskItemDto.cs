@@ -16,7 +16,5 @@ namespace ServiceLayer.Dto
         public DateTime? DueDate { get; set; }
         public bool IsCompleted { get; set; }
         public Priority Priority { get; set; }
-        public int? AssignedUserId { get; set; }
-        public string? AssignedUserName { get; set; }
     }
 }

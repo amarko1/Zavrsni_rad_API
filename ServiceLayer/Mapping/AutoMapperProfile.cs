@@ -45,9 +45,7 @@ namespace ServiceLayer.Mapping
 
             CreateMap<RecipeIngredientRequest, RecipeIngredient>().ReverseMap();
 
-            CreateMap<TaskItem, TaskItemDto>()
-                .ForMember(dest => dest.AssignedUserName, opt => opt.MapFrom(src => src.AssignedUser != null ? $"{src.AssignedUser.FirstName} {src.AssignedUser.LastName}" : null))
-                .ReverseMap();
+            CreateMap<TaskItem, TaskItemDto>().ReverseMap();
         }
     }
 }

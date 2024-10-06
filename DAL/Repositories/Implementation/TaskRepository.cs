@@ -29,8 +29,18 @@ namespace DAL.Repositories.Implementation
         }
         public async Task UpdateTaskAsync(TaskItem updatedTask)
         {
-            _context.TaskItems.Update(updatedTask);
-            await _context.SaveChangesAsync();
+            var existingTask = await _context.TaskItems.FindAsync(updatedTask.Id);
+
+            if (existingTask != null)
+            {
+                existingTask.Title = updatedTask.Title;
+                existingTask.Description = updatedTask.Description;
+                existingTask.Priority = updatedTask.Priority;
+                existingTask.DueDate = updatedTask.DueDate;
+                existingTask.IsCompleted = updatedTask.IsCompleted;
+
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteTaskAsync(int id)
@@ -44,7 +54,24 @@ namespace DAL.Repositories.Implementation
         }
         public async Task<TaskItem?> GetTaskAsync(int id)
         {
-           return await _context.TaskItems.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.TaskItems.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<ICollection<TaskItem>> GetAllTaskAsync()
+        {
+            return await _context.TaskItems.AsNoTracking().ToListAsync();
+        }
+
+        public async Task UpdateTaskCompletionStatusAsync(int id, bool isCompleted)
+        {
+            var task = await _context.TaskItems.FindAsync(id);
+            if (task != null)
+            {
+                task.IsCompleted = isCompleted;
+
+                _context.Entry(task).Property(t => t.IsCompleted).IsModified = true;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

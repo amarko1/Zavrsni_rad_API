@@ -51,5 +51,16 @@ namespace ServiceLayer.Services.Implementation
         {
             await _taskRepository.DeleteTaskAsync(id);
         }
+
+        public async Task<IEnumerable<TaskItemDto>> GetAllTasksAsync()
+        {
+            var tasks = await _taskRepository.GetAllTaskAsync();
+            return _mapper.Map<IEnumerable<TaskItemDto>>(tasks);
+        }
+
+        public async Task UpdateTaskCompletionStatusAsync(int id, bool isCompleted)
+        {
+            await _taskRepository.UpdateTaskCompletionStatusAsync(id, isCompleted);
+        }
     }
 }
