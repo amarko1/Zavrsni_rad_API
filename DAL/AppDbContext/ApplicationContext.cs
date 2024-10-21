@@ -29,6 +29,8 @@ namespace DAL.AppDbContext
         public DbSet<Supply> Supplies { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -79,9 +81,61 @@ namespace DAL.AppDbContext
 
             modelBuilder.Entity<TaskItem>()
                 .HasOne(t => t.AssignedUser)
-                .WithMany(u => u.Tasks)  
+                .WithMany(u => u.Tasks)
                 .HasForeignKey(t => t.AssignedUserId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Order>()
+                .HasKey(o => o.Id);
+
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.OrderItems)
+                .WithOne(oi => oi.Order)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => oi.Id);
+
+            modelBuilder.Entity<Cart>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<CartItem>()
+                .HasKey(ci => ci.Id);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cake)
+                .WithMany()
+                .HasForeignKey(ci => ci.CakeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Cake)
+                .WithMany()
+                .HasForeignKey(oi => oi.CakeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.CakeName)
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }

@@ -15,5 +15,4 @@ namespace ServiceLayer.Dto
         public CategoryDto? Category { get; set; }
         public decimal CostPrice { get; set; }
     }
-
 }

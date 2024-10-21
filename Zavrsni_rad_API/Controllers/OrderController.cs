@@ -1,0 +1,97 @@
+﻿using DAL.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.Dto;
+using ServiceLayer.Services.Abstraction;
+
+namespace Zavrsni_rad_API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OrderController : ControllerBase
+    {
+        private readonly IOrderService _orderService;
+
+        public OrderController(IOrderService orderService)
+        {
+            _orderService = orderService;
+        }
+
+        [HttpGet("GetAllOrders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrdersAsync();
+            return Ok(orders);
+        }
+
+        [HttpGet("GetOrder/{id}")]
+        public async Task<IActionResult> GetOrder(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return Ok(order);
+        }
+
+        [HttpGet("GetOrdersByStatus/{status}")]
+        public async Task<IActionResult> GetOrdersByStatus(OrderStatus status)
+        {
+            var orders = await _orderService.GetOrdersByStatusAsync(status);
+            return Ok(orders);
+        }
+
+        [HttpGet("GetOrdersByUserId/{userId}")]
+        public async Task<IActionResult> GetOrdersByUserId(int userId)
+        {
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+            return Ok(orders);
+        }
+
+        [HttpPost("CreateOrder")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDTO orderCreateDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var orderId = await _orderService.CreateOrderAsync(orderCreateDTO);
+            return Ok(new { OrderId = orderId });
+        }
+
+        [HttpPost("UpdateOrder")]
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderUpdateDTO orderUpdateDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _orderService.UpdateOrderAsync(orderUpdateDTO);
+            return Ok();
+        }
+
+        [HttpPost("ApproveOrder")]
+        public async Task<IActionResult> ApproveOrder([FromBody] OrderApproveDTO approveDTO)
+        {
+            await _orderService.ApproveOrderAsync(approveDTO);
+            return Ok();
+        }
+
+        [HttpPost("RejectOrder")]
+        public async Task<IActionResult> RejectOrder([FromBody] OrderRejectDTO rejectDTO)
+        {
+            await _orderService.RejectOrderAsync(rejectDTO);
+            return Ok();
+        }
+
+        [HttpPost("UpdateOrderStatus")]
+        public async Task<IActionResult> UpdateOrderStatus([FromBody] OrderStatusUpdateDTO statusUpdateDTO)
+        {
+            await _orderService.UpdateOrderStatusAsync(statusUpdateDTO);
+            return Ok();
+        }
+    }
+}

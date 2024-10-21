@@ -46,6 +46,20 @@ namespace ServiceLayer.Mapping
             CreateMap<RecipeIngredientRequest, RecipeIngredient>().ReverseMap();
 
             CreateMap<TaskItem, TaskItemDto>().ReverseMap();
+
+            CreateMap<OrderCreateDTO, Order>();
+            CreateMap<OrderUpdateDTO, Order>();
+            CreateMap<Order, OrderDTO>();
+
+            CreateMap<OrderItemCreateDTO, OrderItem>();
+            CreateMap<OrderItemUpdateDTO, OrderItem>();
+            CreateMap<OrderItem, OrderItemDTO>();
+
+            CreateMap<Cart, CartDTO>();
+            CreateMap<CartItem, CartItemDTO>()
+                .ForMember(dest => dest.CakeName, opt => opt.MapFrom(src => src.Cake.Name))
+                .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Cake.Price))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Cake.Price * src.Quantity));
         }
     }
 }
