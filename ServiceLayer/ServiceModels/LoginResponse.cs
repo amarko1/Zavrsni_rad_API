@@ -10,5 +10,6 @@ namespace ServiceLayer.ServiceModels
     {
         public Tokens Tokens { get; set; } = null!;
         public string Role { get; set; } = null!;
+        public int UserId { get; set; }
     }
 }

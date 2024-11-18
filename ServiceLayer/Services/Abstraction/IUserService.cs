@@ -12,7 +12,7 @@ namespace ServiceLayer.Services.Abstraction
     {
         int GetUserIdByEmail(string email);
         AuthResponse Register(UserRegistrationRequest registerRequest);
-        AuthResponse Login(LoginRequest loginRequest);
+        LoginResponse Login(LoginRequest loginRequest);
         AuthResponse RefreshToken(RefreshRequest refreshRequest);
         AuthResponse Logout(string email);
         void DisableUser(int id);

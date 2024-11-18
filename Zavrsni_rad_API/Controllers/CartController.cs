@@ -18,7 +18,7 @@ namespace Zavrsni_rad_API.Controllers
             _cartService = cartService;
         }
 
-        [HttpGet("GetCart")]
+        [HttpGet("GetCart/{userId}")]
         public async Task<IActionResult> GetCart(int userId)
         {
             var cart = await _cartService.GetCartAsync(userId);

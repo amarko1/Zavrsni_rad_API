@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DAL.Models;
 using DAL.Repositories.Abstraction;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity.Data;
@@ -29,11 +30,13 @@ namespace ServiceLayer.Services.Implementation
             _mapper = mapper;
         }
 
-        public AuthResponse Login(ServiceLayer.ServiceModels.LoginRequest loginRequest)
+        public LoginResponse Login(ServiceLayer.ServiceModels.LoginRequest loginRequest)
         {
-            if (!Authenticate(loginRequest.Email, loginRequest.Password))
+            var user = Authenticate(loginRequest.Email, loginRequest.Password);
+
+            if (user == null)
             {
-                return new AuthResponse { IsSuccessful = false, Message = "Invalid email or password" };
+                return new LoginResponse { IsSuccessful = false, Message = "Invalid email or password" };
             }
 
             JwtTokenProvider jwtTokenProvider = new(_configuration);
@@ -47,6 +50,8 @@ namespace ServiceLayer.Services.Implementation
             {
                 IsSuccessful = true,
                 Message = "Login successful",
+                Role = user.Role,
+                UserId = user.Id,
                 Tokens = new()
                 {
                     AccessToken = jwtTokenProvider.GenerateAccessToken(new JwtTokenBodyInfo
@@ -135,14 +140,11 @@ namespace ServiceLayer.Services.Implementation
             return new AuthResponse { IsSuccessful = true, Message = "Registration successful" };
         }
 
-        private bool Authenticate(string email, string password)
+        private User? Authenticate(string email, string password)
         {
             var user = _repository.GetUser(u => u.Email == email);
 
-            if (user == null)
-            {
-                return false;
-            }
+            if (user == null) return null;
 
             byte[] salt = Convert.FromBase64String(user.PwdSalt);
             byte[] hash = Convert.FromBase64String(user.PwdHash);
@@ -155,7 +157,7 @@ namespace ServiceLayer.Services.Implementation
                     iterationCount: 100000,
                     numBytesRequested: 256 / 8);
 
-            return hash.SequenceEqual(calcHash);
+            return hash.SequenceEqual(calcHash) ? user : null;
         }
 
         public void DisableUser(int id)

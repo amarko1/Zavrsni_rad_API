@@ -113,7 +113,7 @@ namespace ServiceLayer.Services.Implementation
                 throw new InvalidOperationException("Cart not found.");
             }
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == removeFromCartDTO.UserId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Id == removeFromCartDTO.CartItemId);
             if (cartItem == null)
             {
                 throw new InvalidOperationException("Cart item not found.");
