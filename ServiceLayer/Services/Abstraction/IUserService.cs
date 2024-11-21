@@ -18,5 +18,6 @@ namespace ServiceLayer.Services.Abstraction
         void DisableUser(int id);
         void EnableUser(int id);
         List<UserDto> GetAllUsers();
+        public UserDto GetUserById(int id);
     }
 }

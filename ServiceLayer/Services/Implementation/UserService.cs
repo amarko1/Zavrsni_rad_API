@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Models;
 using DAL.Repositories.Abstraction;
+using DAL.Repositories.Implementation;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,7 @@ namespace ServiceLayer.Services.Implementation
 
             _repository.UpdateRefreshToken(refreshToken, loginRequest.Email);
             _repository.Save();
- 
+
 
             return new LoginResponse
             {
@@ -192,6 +193,12 @@ namespace ServiceLayer.Services.Implementation
         {
             var users = _repository.GetAll();
             return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public UserDto GetUserById(int id)
+        {
+           var user = _repository.GetUser(u => u.Id == id);
+           return _mapper.Map<UserDto>(user);
         }
     }
 }

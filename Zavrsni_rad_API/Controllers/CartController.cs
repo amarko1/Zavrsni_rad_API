@@ -47,8 +47,9 @@ namespace Zavrsni_rad_API.Controllers
         }
 
         [HttpPost("ClearCart")]
-        public async Task<IActionResult> ClearCart(int userId)
+        public async Task<IActionResult> ClearCart([FromBody] int userId)
         {
+            Console.WriteLine($"Received userId: {userId}");
             await _cartService.ClearCartAsync(userId);
             return Ok();
         }

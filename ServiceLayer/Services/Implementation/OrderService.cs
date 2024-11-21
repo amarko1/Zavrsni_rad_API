@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Models;
 using DAL.Repositories.Abstraction;
+using DAL.Repositories.Implementation;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
 using System;
@@ -15,22 +16,37 @@ namespace ServiceLayer.Services.Implementation
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ICakeRepository _cakeRepository;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository, ICakeRepository cakeRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, ICakeRepository cakeRepository, IUserService userService, IMapper mapper)
         {
             _orderRepository = orderRepository;
             _cakeRepository = cakeRepository;
+            _userService = userService;
             _mapper = mapper;
         }
 
         public async Task<int> CreateOrderAsync(OrderCreateDTO orderCreateDTO)
         {
-            var newOrder = _mapper.Map<Order>(orderCreateDTO);
-            newOrder.CreatedAt = DateTime.UtcNow;
-            newOrder.UpdatedAt = DateTime.UtcNow;
-            newOrder.OrderStatus = OrderStatus.New;
+            var user = _userService.GetUserById(orderCreateDTO.UserId);
+            if (user == null)
+            {
+                throw new InvalidOperationException("User not found.");
+            }
 
+            var newOrder = new Order
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PaymentMethod = orderCreateDTO.PaymentMethod,
+                PickUpLocation = orderCreateDTO.PickUpLocation,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                OrderStatus = OrderStatus.New
+            };
             var orderItems = await CreateOrderItemsAsync(orderCreateDTO.OrderItems);
             newOrder.OrderItems = orderItems;
             newOrder.TotalPrice = orderItems.Sum(item => item.TotalPrice);

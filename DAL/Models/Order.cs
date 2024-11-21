@@ -18,6 +18,8 @@ namespace DAL.Models
         public DateTime? EstimatedPickupDate { get; set; }
         public string? OperatorNote { get; set; }
         public double TotalPrice { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
+        public string PickUpLocation { get; set; } = string.Empty;
         public int? UserId { get; set; } 
         public User? User { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

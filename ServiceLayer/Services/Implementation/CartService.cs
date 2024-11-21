@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DAL.AppDbContext;
 using DAL.Models;
 using DAL.Repositories.Abstraction;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
 using System;
@@ -16,12 +18,14 @@ namespace ServiceLayer.Services.Implementation
         private readonly ICartRepository _cartRepository;
         private readonly ICakeRepository _cakeRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicationContext _context;
 
-        public CartService(ICartRepository cartRepository, ICakeRepository cakeRepository, IMapper mapper)
+        public CartService(ApplicationContext context, ICartRepository cartRepository, ICakeRepository cakeRepository, IMapper mapper)
         {
             _cartRepository = cartRepository;
             _cakeRepository = cakeRepository;
             _mapper = mapper;
+            _context = context;
         }
 
         public async Task<CartDTO> GetCartAsync(int userId)
@@ -128,16 +132,20 @@ namespace ServiceLayer.Services.Implementation
         public async Task ClearCartAsync(int userId)
         {
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
-            if (cart == null)
+            if (cart == null || !cart.CartItems.Any())
             {
                 return;
             }
 
-            cart.CartItems.Clear();
+            // Eksplicitno brisanje stavki
+            _context.CartItems.RemoveRange(cart.CartItems);
+
             cart.UpdatedAt = DateTime.UtcNow;
 
-            await _cartRepository.UpdateCartAsync(cart);
+            await _context.SaveChangesAsync();
         }
+
+
     }
 
 }

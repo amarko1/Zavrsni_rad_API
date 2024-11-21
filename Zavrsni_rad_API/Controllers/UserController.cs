@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.Dto;
 using ServiceLayer.ServiceModels;
 using ServiceLayer.Services.Abstraction;
 
@@ -42,6 +44,19 @@ namespace Zavrsni_rad_API.Controllers
         {
             var response = _userService.Logout(userEmail);
             return response.IsSuccessful ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("GetUser/{userId}")]
+        public IActionResult GetUser(int userId)
+        {
+            UserDto user = _userService.GetUserById(userId);
+
+            if (user == null)
+            {
+                return NotFound("User by that id not found");
+            }
+
+            return Ok(user);
         }
     }
 }

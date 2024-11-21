@@ -19,6 +19,8 @@ namespace ServiceLayer.Dto
         public DateTime? EstimatedPickupDate { get; set; }
         public string? OperatorNote { get; set; }
         public double TotalPrice { get; set; }
+        public string PickUpLocation { get; set; } = string.Empty;
+        public string PaymentMethod { get; set; } = string.Empty;
         public List<OrderItemDTO> OrderItems { get; set; } = new List<OrderItemDTO>();
     }
 
@@ -34,9 +36,9 @@ namespace ServiceLayer.Dto
 
     public class OrderCreateDTO
     {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public string PickUpLocation{ get; set; } = string.Empty;
+        public string PaymentMethod{ get; set; } = string.Empty;
         public List<OrderItemCreateDTO> OrderItems { get; set; } = new List<OrderItemCreateDTO>();
     }
 
@@ -62,6 +64,7 @@ namespace ServiceLayer.Dto
         public double TotalPrice { get; set; }
         public List<OrderItemUpdateDTO> OrderItems { get; set; } = new List<OrderItemUpdateDTO>();
     }
+
     public class OrderItemUpdateDTO
     {
         public int Id { get; set; }
