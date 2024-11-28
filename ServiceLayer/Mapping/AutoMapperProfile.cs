@@ -60,6 +60,10 @@ namespace ServiceLayer.Mapping
                 .ForMember(dest => dest.CakeName, opt => opt.MapFrom(src => src.Cake.Name))
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Cake.Price))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Cake.Price * src.Quantity));
+
+            CreateMap<User, UserDto>()
+                .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders));
+
         }
     }
 }

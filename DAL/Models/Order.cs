@@ -28,7 +28,6 @@ namespace DAL.Models
     public enum OrderStatus
     {
         New,
-        PendingApproval,
         Approved,
         Rejected,
         InPreparation,

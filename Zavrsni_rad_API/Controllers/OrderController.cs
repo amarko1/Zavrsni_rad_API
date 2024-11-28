@@ -17,12 +17,13 @@ namespace Zavrsni_rad_API.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet("GetAllOrders")]
-        public async Task<IActionResult> GetAllOrders()
+        [HttpGet("GetOrders")]
+        public async Task<IActionResult> GetOrders([FromQuery] OrderStatus? status = null, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null)
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await _orderService.GetOrdersAsync(status, dateFrom, dateTo);
             return Ok(orders);
         }
+
 
         [HttpGet("GetOrder/{id}")]
         public async Task<IActionResult> GetOrder(int id)

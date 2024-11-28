@@ -118,11 +118,12 @@ namespace ServiceLayer.Services.Implementation
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<IEnumerable<OrderDTO>> GetAllOrdersAsync()
+        public async Task<IEnumerable<OrderDTO>> GetOrdersAsync(OrderStatus? status, DateTime? dateFrom, DateTime? dateTo)
         {
-            var orders = await _orderRepository.GetAllOrdersAsync();
+            var orders = await _orderRepository.GetOrdersAsync(status, dateFrom, dateTo);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
+
 
         public async Task<IEnumerable<OrderDTO>> GetOrdersByStatusAsync(OrderStatus status)
         {

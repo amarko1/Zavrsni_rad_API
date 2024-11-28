@@ -58,5 +58,26 @@ namespace Zavrsni_rad_API.Controllers
 
             return Ok(user);
         }
+
+        [HttpGet("GetAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            var users = _userService.GetAllUsers();
+            return Ok(users);
+        }
+
+        [HttpPost("DisableUser")]
+        public IActionResult DisableUser([FromBody] int id)
+        {
+            _userService.DisableUser(id);
+            return Ok(new { Message = "User disabled successfully" });
+        }
+
+        [HttpPost("EnableUser")]
+        public IActionResult EnableUser([FromBody] int id)
+        {
+            _userService.EnableUser(id);
+            return Ok(new { Message = "User enabled successfully" });
+        }
     }
 }

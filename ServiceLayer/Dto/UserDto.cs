@@ -16,5 +16,7 @@ namespace ServiceLayer.Dto
         public string Role { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public bool IsDisabled { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public List<OrderDTO> Orders { get; set; }
     }
 }

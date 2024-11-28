@@ -12,7 +12,7 @@ namespace ServiceLayer.Services.Abstraction
     {
         Task<int> CreateOrderAsync(OrderCreateDTO orderCreateDTO);
         Task<OrderDTO?> GetOrderByIdAsync(int id);
-        Task<IEnumerable<OrderDTO>> GetAllOrdersAsync();
+        Task<IEnumerable<OrderDTO>> GetOrdersAsync(OrderStatus? status, DateTime? dateFrom, DateTime? dateTo);
         Task<IEnumerable<OrderDTO>> GetOrdersByStatusAsync(OrderStatus status);
         Task<IEnumerable<OrderDTO>> GetOrdersByUserIdAsync(int userId);
         Task UpdateOrderAsync(OrderUpdateDTO orderUpdateDTO);

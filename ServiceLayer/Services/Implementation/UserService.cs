@@ -165,6 +165,11 @@ namespace ServiceLayer.Services.Implementation
         {
             var user = _repository.GetUser(u => u.Id == id);
 
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
             if (!user.IsDisabled)
             {
                 user.IsDisabled = true;
@@ -175,6 +180,11 @@ namespace ServiceLayer.Services.Implementation
         public void EnableUser(int id)
         {
             var user = _repository.GetUser(u => u.Id == id);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
 
             if (user.IsDisabled)
             {

@@ -32,12 +32,30 @@ namespace DAL.Repositories.Implementation
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        public async Task<IEnumerable<Order>> GetOrdersAsync(OrderStatus? status, DateTime? dateFrom, DateTime? dateTo)
         {
-            return await _context.Orders
+            var query = _context.Orders
                 .Include(o => o.OrderItems)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (status.HasValue)
+            {
+                query = query.Where(o => o.OrderStatus == status.Value);
+            }
+
+            if (dateFrom.HasValue)
+            {
+                query = query.Where(o => o.CreatedAt >= dateFrom.Value);
+            }
+
+            if (dateTo.HasValue)
+            {
+                query = query.Where(o => o.CreatedAt <= dateTo.Value);
+            }
+
+            return await query.ToListAsync();
         }
+
 
         public async Task UpdateOrderAsync(Order order)
         {

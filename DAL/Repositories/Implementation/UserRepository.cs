@@ -29,7 +29,10 @@ namespace DAL.Repositories.Implementation
 
         public User? GetUser(Expression<Func<User, bool>> filter)
         {
-            return _context.Users.FirstOrDefault(filter);
+            return _context.Users
+                    .Include(u => u.Orders)
+                    .ThenInclude(o => o.OrderItems)
+                    .FirstOrDefault(filter);
         }
 
         public void UpdateRefreshToken(string? refreshToken, string userEmail)

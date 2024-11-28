@@ -11,7 +11,7 @@ namespace DAL.Repositories.Abstraction
     {
         Task CreateOrderAsync(Order newOrder);
         Task<Order?> GetOrderAsync(int id);
-        Task<IEnumerable<Order>> GetAllOrdersAsync();
+        Task<IEnumerable<Order>> GetOrdersAsync(OrderStatus? status, DateTime? dateFrom, DateTime? dateTo);
         Task UpdateOrderAsync(Order order);
         Task DeleteOrderAsync(int id);
         Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status);
