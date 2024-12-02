@@ -19,4 +19,10 @@ namespace ServiceLayer.Dto
         public DateTime CreatedAt { get; set; }
         public List<OrderDTO> Orders { get; set; }
     }
+
+    public class UpdateUserRoleRequest
+    {
+        public int UserId { get; set; }
+        public string NewRole { get; set; } = string.Empty;
+    }
 }

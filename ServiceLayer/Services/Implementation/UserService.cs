@@ -210,5 +210,18 @@ namespace ServiceLayer.Services.Implementation
            var user = _repository.GetUser(u => u.Id == id);
            return _mapper.Map<UserDto>(user);
         }
+
+        public void UpdateUserRole(int userId, string newRole)
+        {
+            var user = _repository.GetUser(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+
+            user.Role = newRole;
+            _repository.Save();
+        }
     }
 }

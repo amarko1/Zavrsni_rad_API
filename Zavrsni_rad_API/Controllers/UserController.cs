@@ -79,5 +79,23 @@ namespace Zavrsni_rad_API.Controllers
             _userService.EnableUser(id);
             return Ok(new { Message = "User enabled successfully" });
         }
+
+        [HttpPost("UpdateUserRole")]
+        public IActionResult UpdateUserRole([FromBody] UpdateUserRoleRequest request)
+        {
+            try
+            {
+                _userService.UpdateUserRole(request.UserId, request.NewRole);
+                return Ok(new { Message = "User role updated successfully." });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("User not found.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

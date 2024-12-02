@@ -19,5 +19,6 @@ namespace ServiceLayer.Services.Abstraction
         void EnableUser(int id);
         List<UserDto> GetAllUsers();
         public UserDto GetUserById(int id);
+        void UpdateUserRole(int userId, string newRole);
     }
 }
