@@ -2,6 +2,7 @@
 using DAL.Models;
 using DAL.Repositories.Abstraction;
 using DAL.Repositories.Implementation;
+using Microsoft.AspNetCore.SignalR;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
 using System;

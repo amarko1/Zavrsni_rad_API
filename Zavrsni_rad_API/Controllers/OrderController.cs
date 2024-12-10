@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
+using Zavrsni_rad_API.Hubs;
 
 namespace Zavrsni_rad_API.Controllers
 {
@@ -11,10 +12,12 @@ namespace Zavrsni_rad_API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly SignalRService _signalRService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, SignalRService signalRService)
         {
             _orderService = orderService;
+            _signalRService = signalRService;
         }
 
         [HttpGet("GetOrders")]
@@ -59,6 +62,14 @@ namespace Zavrsni_rad_API.Controllers
             }
 
             var orderId = await _orderService.CreateOrderAsync(orderCreateDTO);
+
+            var orderDetails = await _orderService.GetOrderByIdAsync(orderId);
+            if (orderDetails == null) 
+            {
+                return BadRequest(ModelState); 
+            }
+            await _signalRService.NotifyNewOrder(orderDetails);
+
             return Ok(new { OrderId = orderId });
         }
 

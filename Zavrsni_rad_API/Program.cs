@@ -9,6 +9,7 @@ using ServiceLayer.Mapping;
 using ServiceLayer.Services.Abstraction;
 using ServiceLayer.Services.Implementation;
 using System.Text;
+using Zavrsni_rad_API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,8 +99,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder => builder.WithOrigins("http://localhost:4200")
                            .AllowAnyMethod()
-                           .AllowAnyHeader());
+                           .AllowAnyHeader()
+                           .AllowCredentials());
 });
+
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<SignalRService>();
 
 var app = builder.Build();
 
@@ -116,8 +121,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<OrderHub>("/hubs/orders");
+});
 
 app.Run();
