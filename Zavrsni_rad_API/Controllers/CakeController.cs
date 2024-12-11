@@ -98,5 +98,12 @@ namespace Zavrsni_rad_API.Controllers
             var imageBytes = Convert.FromBase64String(imageContent);
             return new FileContentResult(imageBytes, "application/octet-stream");
         }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchCakes([FromQuery] string q)
+        {
+            var cakes = await _cakeService.SearchCakesAsync(q);
+            return Ok(cakes);
+        }
     }
 }

@@ -89,4 +89,17 @@ public class CakeService : ICakeService
         var cake = await _cakeRepository.GetCakeAsync(id);
         return cake?.ImageContent;
     }
+
+    public async Task<IEnumerable<CakeDto>> SearchCakesAsync(string query)
+    {
+        var cakes = await _cakeRepository.SearchCakesAsync(query);
+        return cakes.Select(c => new CakeDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            Description = c.Description,
+            Price = c.Price
+        });
+    }
 }
+

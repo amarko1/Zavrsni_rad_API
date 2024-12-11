@@ -88,6 +88,12 @@ namespace DAL.Repositories.Implementation
                 return _context.Cakes.Any(s => s.Name == name);
             }
         }
-    }
 
+        public async Task<IEnumerable<Cake>> SearchCakesAsync(string query)
+        {
+            return await _context.Cakes
+                .Where(c => c.Name.Contains(query))
+                .ToListAsync();
+        }
+    }
 }

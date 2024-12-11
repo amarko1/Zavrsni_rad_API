@@ -16,6 +16,7 @@ namespace ServiceLayer.Services.Abstraction
         Task UpdateCakeAsync(CakeUpdateRequest updatedCake);
         Task DeleteCakeAsync(int id);
         Task<string?> GetImageContentAsync(int id);
+        Task<IEnumerable<CakeDto>> SearchCakesAsync(string query);
     }
 
 }
