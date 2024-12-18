@@ -4,11 +4,13 @@ using ServiceLayer.Dto;
 using ServiceLayer.Services.Abstraction;
 using ServiceLayer.Services.Implementation;
 using ServiceLayer.ServiceModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Zavrsni_rad_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;
