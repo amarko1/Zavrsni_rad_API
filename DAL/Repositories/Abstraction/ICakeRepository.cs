@@ -17,5 +17,6 @@ namespace DAL.Repositories.Abstraction
         Task SaveAsync();
         bool CheckIfCakeNameExists(string name, int? currentId = null);
         Task<IEnumerable<Cake>> SearchCakesAsync(string query);
+        Task<List<Cake>> GetFilteredCakesAsync(CakeFilterParams filterParams);
     }
 }

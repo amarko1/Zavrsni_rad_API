@@ -9,7 +9,6 @@ namespace Zavrsni_rad_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

@@ -95,5 +95,27 @@ namespace DAL.Repositories.Implementation
                 .Where(c => c.Name.Contains(query))
                 .ToListAsync();
         }
+
+        public async Task<List<Cake>> GetFilteredCakesAsync(CakeFilterParams filterParams)
+        {
+            var query = _context.Cakes.AsQueryable();
+
+            if (filterParams.CategoryId.HasValue)
+            {
+                query = query.Where(c => c.CategoryId == filterParams.CategoryId.Value);
+            }
+
+            if (filterParams.Allergens != null && filterParams.Allergens.Any())
+            {
+                query = query.Where(c => !c.Allergens.Any(a => filterParams.Allergens.Contains(a)));
+            }
+
+            if (!string.IsNullOrEmpty(filterParams.Name))
+            {
+                query = query.Where(c => c.Name.Contains(filterParams.Name));
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

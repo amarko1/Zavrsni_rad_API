@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Dto;
@@ -104,6 +105,13 @@ namespace Zavrsni_rad_API.Controllers
         public async Task<IActionResult> SearchCakes([FromQuery] string q)
         {
             var cakes = await _cakeService.SearchCakesAsync(q);
+            return Ok(cakes);
+        }
+
+        [HttpGet("filtered")]
+        public async Task<IActionResult> GetFilteredCakes([FromQuery] CakeFilterParams filterParams)
+        {
+            var cakes = await _cakeService.GetFilteredCakesAsync(filterParams);
             return Ok(cakes);
         }
     }

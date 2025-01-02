@@ -1,4 +1,5 @@
-﻿using ServiceLayer.Dto;
+﻿using DAL.Models;
+using ServiceLayer.Dto;
 using ServiceLayer.ServiceModels;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace ServiceLayer.Services.Abstraction
         Task DeleteCakeAsync(int id);
         Task<string?> GetImageContentAsync(int id);
         Task<IEnumerable<CakeDto>> SearchCakesAsync(string query);
+        Task<List<Cake>> GetFilteredCakesAsync(CakeFilterParams filterParams);
     }
 
 }

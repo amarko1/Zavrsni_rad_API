@@ -12,4 +12,11 @@ namespace DAL.Models
         public string Size { get; set; } = string.Empty;
         public string CustomMessage { get; set; } = string.Empty;
     }
+
+    public class CakeFilterParams
+    {
+        public int? CategoryId { get; set; }
+        public string? Name { get; set; }
+        public List<string>? Allergens { get; set; }
+    }
 }

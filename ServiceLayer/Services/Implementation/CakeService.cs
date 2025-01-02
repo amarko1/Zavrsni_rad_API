@@ -101,5 +101,10 @@ public class CakeService : ICakeService
             Price = c.Price
         });
     }
+
+    public async Task<List<Cake>> GetFilteredCakesAsync(CakeFilterParams filterParams)
+    {
+        return await _cakeRepository.GetFilteredCakesAsync(filterParams);
+    }
 }
 
