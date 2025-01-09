@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,9 +22,10 @@ namespace ServiceLayer.Dto
         public int CakeId { get; set; }
         public string CakeName { get; set; } = string.Empty;
         public int Quantity { get; set; }
-        public string Customizations { get; set; } = string.Empty;
         public decimal UnitPrice { get; set; }
         public decimal TotalPrice { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class AddToCartDTO
@@ -31,7 +33,8 @@ namespace ServiceLayer.Dto
         public int UserId { get; set; }
         public int CakeId { get; set; }
         public int Quantity { get; set; }
-        public string Customizations { get; set; } = string.Empty;
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class UpdateCartItemDTO
@@ -39,7 +42,8 @@ namespace ServiceLayer.Dto
         public int UserId { get; set; }
         public int CartItemId { get; set; }
         public int Quantity { get; set; }
-        public string Customizations { get; set; } = string.Empty;
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class RemoveFromCartDTO

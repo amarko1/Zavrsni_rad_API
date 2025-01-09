@@ -48,8 +48,6 @@ public class CakeService : ICakeService
             CategoryId = newCake.CategoryId,
             Name = newCake.Name,
             Price = newCake.Price,
-            Size = newCake.Size,
-            CustomMessage = newCake.CustomMessage,
             Description = newCake.Description
         });
     }
@@ -73,8 +71,6 @@ public class CakeService : ICakeService
             CategoryId = updatedCake.CategoryId,
             Name = updatedCake.Name,
             Price = updatedCake.Price,
-            Size = updatedCake.Size,
-            CustomMessage = updatedCake.CustomMessage,
             Description = updatedCake.Description
         });
     }

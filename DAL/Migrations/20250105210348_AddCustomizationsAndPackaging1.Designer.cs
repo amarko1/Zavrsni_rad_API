@@ -4,6 +4,7 @@ using DAL.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250105210348_AddCustomizationsAndPackaging1")]
+    partial class AddCustomizationsAndPackaging1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,12 +64,6 @@ namespace DAL.Migrations
 
                     b.Property<int>("CartId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Packaging")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -214,14 +211,8 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Packaging")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -521,9 +512,52 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("DAL.Models.Customization", "Customizations", b1 =>
+                        {
+                            b1.Property<int>("CartItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("CustomMessage")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("CartItemId");
+
+                            b1.ToTable("CartItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CartItemId");
+
+                            b1.OwnsOne("DAL.Models.Packaging", "Packaging", b2 =>
+                                {
+                                    b2.Property<int>("CustomizationCartItemId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<decimal?>("Price")
+                                        .HasColumnType("decimal(18,2)");
+
+                                    b2.Property<int>("Type")
+                                        .HasColumnType("int");
+
+                                    b2.HasKey("CustomizationCartItemId");
+
+                                    b2.ToTable("CartItems");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomizationCartItemId");
+                                });
+
+                            b1.Navigation("Packaging");
+                        });
+
                     b.Navigation("Cake");
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Customizations");
                 });
 
             modelBuilder.Entity("DAL.Models.Order", b =>
@@ -550,7 +584,50 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("DAL.Models.Customization", "Customizations", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("CustomMessage")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("OrderItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+
+                            b1.OwnsOne("DAL.Models.Packaging", "Packaging", b2 =>
+                                {
+                                    b2.Property<int>("CustomizationOrderItemId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<decimal?>("Price")
+                                        .HasColumnType("decimal(18,2)");
+
+                                    b2.Property<int>("Type")
+                                        .HasColumnType("int");
+
+                                    b2.HasKey("CustomizationOrderItemId");
+
+                                    b2.ToTable("OrderItems");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomizationOrderItemId");
+                                });
+
+                            b1.Navigation("Packaging");
+                        });
+
                     b.Navigation("Cake");
+
+                    b.Navigation("Customizations");
 
                     b.Navigation("Order");
                 });

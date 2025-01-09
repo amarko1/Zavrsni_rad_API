@@ -4,6 +4,7 @@ using DAL.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250105203358_AddCustomizationsAndPackaging")]
+    partial class AddCustomizationsAndPackaging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,11 +65,8 @@ namespace DAL.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Packaging")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CustomizationsId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -76,6 +76,8 @@ namespace DAL.Migrations
                     b.HasIndex("CakeId");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("CustomizationsId");
 
                     b.ToTable("CartItems");
                 });
@@ -104,6 +106,31 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("DAL.Models.Customization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustomMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PackagingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackagingId");
+
+                    b.ToTable("Customization");
                 });
 
             modelBuilder.Entity("DAL.Models.Ingredient", b =>
@@ -214,14 +241,11 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CustomizationsId")
+                        .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Packaging")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -236,9 +260,30 @@ namespace DAL.Migrations
 
                     b.HasIndex("CakeId");
 
+                    b.HasIndex("CustomizationsId");
+
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("DAL.Models.Packaging", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Packaging");
                 });
 
             modelBuilder.Entity("DAL.Models.Product", b =>
@@ -521,9 +566,24 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Models.Customization", "Customizations")
+                        .WithMany()
+                        .HasForeignKey("CustomizationsId");
+
                     b.Navigation("Cake");
 
                     b.Navigation("Cart");
+
+                    b.Navigation("Customizations");
+                });
+
+            modelBuilder.Entity("DAL.Models.Customization", b =>
+                {
+                    b.HasOne("DAL.Models.Packaging", "Packaging")
+                        .WithMany()
+                        .HasForeignKey("PackagingId");
+
+                    b.Navigation("Packaging");
                 });
 
             modelBuilder.Entity("DAL.Models.Order", b =>
@@ -544,6 +604,10 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("DAL.Models.Customization", "Customizations")
+                        .WithMany()
+                        .HasForeignKey("CustomizationsId");
+
                     b.HasOne("DAL.Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
@@ -551,6 +615,8 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Cake");
+
+                    b.Navigation("Customizations");
 
                     b.Navigation("Order");
                 });

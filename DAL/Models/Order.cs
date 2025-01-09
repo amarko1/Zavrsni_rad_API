@@ -42,10 +42,11 @@ namespace DAL.Models
         public string CakeName { get; set; }
         public double UnitPrice { get; set; }
         public double TotalPrice { get; set; }
-        public string Customizations { get; set; }
         public int OrderId { get; set; }
         public int CakeId { get; set; }
         public Cake Cake { get; set; }
         public Order Order { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 }

@@ -75,7 +75,8 @@ namespace ServiceLayer.Services.Implementation
                     Quantity = itemDto.Quantity,
                     UnitPrice = cake.Price,
                     TotalPrice = cake.Price * itemDto.Quantity,
-                    Customizations = itemDto.Customizations
+                    Message = itemDto.Message,
+                    Packaging = itemDto.Packaging,
                 };
 
                 orderItems.Add(orderItem);
@@ -103,7 +104,8 @@ namespace ServiceLayer.Services.Implementation
                     Quantity = itemDto.Quantity,
                     UnitPrice = cake.Price,
                     TotalPrice = cake.Price * itemDto.Quantity,
-                    Customizations = itemDto.Customizations
+                    Message = itemDto.Message,
+                    Packaging = itemDto.Packaging
                 };
 
                 orderItems.Add(orderItem);

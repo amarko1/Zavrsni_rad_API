@@ -53,8 +53,6 @@ namespace DAL.Repositories.Implementation
                 cake.ImageContent = updatedCake.ImageContent;
                 cake.CategoryId = updatedCake.CategoryId;
                 cake.Allergens = updatedCake.Allergens;
-                cake.Size = updatedCake.Size;
-                cake.CustomMessage = updatedCake.CustomMessage;
                 cake.UpdatedAt = DateTime.Now;
 
                 _context.Cakes.Update(cake);

@@ -15,8 +15,6 @@ namespace ServiceLayer.Dto
         public string Description { get; set; } = string.Empty;
         public string? ImageContent { get; set; }
         public List<string> Allergens { get; set; }
-        public string Size { get; set; } = string.Empty;
-        public string CustomMessage { get; set; } = string.Empty;
         public CategoryDto? Category { get; set; }
     }
 }

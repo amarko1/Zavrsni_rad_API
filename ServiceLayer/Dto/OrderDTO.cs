@@ -31,7 +31,8 @@ namespace ServiceLayer.Dto
         public string CakeName { get; set; } = string.Empty;
         public double UnitPrice { get; set; }
         public double TotalPrice { get; set; }
-        public string? Customizations { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class OrderCreateDTO
@@ -46,7 +47,8 @@ namespace ServiceLayer.Dto
     {
         public int CakeId { get; set; }
         public int Quantity { get; set; }
-        public string? Customizations { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class OrderStatusUpdateDTO
@@ -70,7 +72,8 @@ namespace ServiceLayer.Dto
         public int Id { get; set; }
         public int CakeId { get; set; }
         public int Quantity { get; set; }
-        public string? Customizations { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 
     public class OrderApproveDTO

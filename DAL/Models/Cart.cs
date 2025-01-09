@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace DAL.Models
         public int Quantity { get; set; }
         public Cake Cake { get; set; }
         public Cart Cart { get; set; }
-        public string Customizations { get; set; }
+        public string? Message { get; set; }
+        public string? Packaging { get; set; }
     }
 }

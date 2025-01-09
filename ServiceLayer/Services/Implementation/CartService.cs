@@ -65,7 +65,7 @@ namespace ServiceLayer.Services.Implementation
                 throw new InvalidOperationException("Cake not found.");
             }
 
-            var existingCartItem = cart.CartItems.FirstOrDefault(ci => ci.CakeId == addToCartDTO.CakeId && ci.Customizations == addToCartDTO.Customizations);
+            var existingCartItem = cart.CartItems.FirstOrDefault(ci => ci.CakeId == addToCartDTO.CakeId);
             if (existingCartItem != null)
             {
                 existingCartItem.Quantity += addToCartDTO.Quantity;
@@ -76,7 +76,8 @@ namespace ServiceLayer.Services.Implementation
                 {
                     CakeId = cake.Id,
                     Quantity = addToCartDTO.Quantity,
-                    Customizations = addToCartDTO.Customizations,
+                    Message = addToCartDTO.Message,
+                    Packaging = addToCartDTO.Packaging,
                     CartId = cart.Id,
                     Cake = cake,
                     Cart = cart
@@ -103,7 +104,8 @@ namespace ServiceLayer.Services.Implementation
             }
 
             cartItem.Quantity = updateCartItemDTO.Quantity;
-            cartItem.Customizations = updateCartItemDTO.Customizations;
+            cartItem.Message = updateCartItemDTO.Message;
+            cartItem.Packaging = updateCartItemDTO.Packaging;
             cart.UpdatedAt = DateTime.UtcNow;
 
             await _cartRepository.UpdateCartAsync(cart);
