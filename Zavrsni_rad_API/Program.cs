@@ -65,12 +65,15 @@ builder.Services.AddSwaggerGen(opt =>
 });
 
 
+//builder.Services.AddDbContext<ApplicationContext>(options =>
+//{
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")
+//    );
+//});
+
 builder.Services.AddDbContext<ApplicationContext>(options =>
-{
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    );
-});
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IUserService, UserService>();
@@ -106,6 +109,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<SignalRService>();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 var app = builder.Build();
 
 
@@ -119,7 +124,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.Urls.Add("http://*:5000");
+
+// app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseAuthentication();
