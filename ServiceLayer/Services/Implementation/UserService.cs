@@ -18,63 +18,63 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services.Implementation
 {
-    public class UserService : IUserService
-    {
-        private readonly IMapper _mapper;
-        private readonly IUserRepository _repository;
-        private readonly IConfiguration _configuration;
-
-        public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper)
+        public class UserService : IUserService
         {
-            _repository = userRepository;
-            _configuration = configuration;
-            _mapper = mapper;
-        }
+            private readonly IMapper _mapper;
+            private readonly IUserRepository _repository;
+            private readonly IConfiguration _configuration;
 
-        public LoginResponse Login(ServiceLayer.ServiceModels.LoginRequest loginRequest)
-        {
-            var user = Authenticate(loginRequest.Email, loginRequest.Password);
-
-            if (user == null)
+            public UserService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper)
             {
-                return new LoginResponse { IsSuccessful = false, Message = "Invalid email or password" };
+                _repository = userRepository;
+                _configuration = configuration;
+                _mapper = mapper;
             }
 
-            JwtTokenProvider jwtTokenProvider = new(_configuration);
-            var refreshToken = jwtTokenProvider.GenerateRefreshToken();
-
-            _repository.UpdateRefreshToken(refreshToken, loginRequest.Email);
-            _repository.Save();
-
-
-            return new LoginResponse
+            public LoginResponse Login(ServiceLayer.ServiceModels.LoginRequest loginRequest)
             {
-                IsSuccessful = true,
-                Message = "Login successful",
-                Role = user.Role,
-                UserId = user.Id,
-                Tokens = new()
+                var user = Authenticate(loginRequest.Email, loginRequest.Password);
+
+                if (user == null)
                 {
-                    AccessToken = jwtTokenProvider.GenerateAccessToken(new JwtTokenBodyInfo
-                    {
-                        Email = loginRequest.Email
-                    }),
-                    RefreshToken = refreshToken
+                    return new LoginResponse { IsSuccessful = false, Message = "Invalid email or password" };
                 }
-            };
-        }
 
-        public AuthResponse Logout(string email)
-        {
-            _repository.UpdateRefreshToken(null, email);
-            _repository.Save();
+                JwtTokenProvider jwtTokenProvider = new(_configuration);
+                var refreshToken = jwtTokenProvider.GenerateRefreshToken();
 
-            return new AuthResponse { IsSuccessful = true, Message = "Logout successful" };
-        }
+                _repository.UpdateRefreshToken(refreshToken, loginRequest.Email);
+                _repository.Save();
 
-        public AuthResponse RefreshToken(ServiceLayer.ServiceModels.RefreshRequest refreshRequest)
-        {
-            var user = _repository.GetUser(u => u.RefreshToken!.Equals(refreshRequest.RefreshToken));
+
+                return new LoginResponse
+                {
+                    IsSuccessful = true,
+                    Message = "Login successful",
+                    Role = user.Role,
+                    UserId = user.Id,
+                    Tokens = new()
+                    {
+                        AccessToken = jwtTokenProvider.GenerateAccessToken(new JwtTokenBodyInfo
+                        {
+                            Email = loginRequest.Email
+                        }),
+                        RefreshToken = refreshToken
+                    }
+                };
+            }
+
+            public AuthResponse Logout(string email)
+            {
+                _repository.UpdateRefreshToken(null, email);
+                _repository.Save();
+
+                return new AuthResponse { IsSuccessful = true, Message = "Logout successful" };
+            }
+
+            public AuthResponse RefreshToken(ServiceLayer.ServiceModels.RefreshRequest refreshRequest)
+            {
+                var user = _repository.GetUser(u => u.RefreshToken!.Equals(refreshRequest.RefreshToken));
 
             if (user == null)
             {
