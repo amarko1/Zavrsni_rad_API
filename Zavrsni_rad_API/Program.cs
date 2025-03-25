@@ -100,7 +100,7 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("http://localhost:4200")
+        builder => builder.WithOrigins("https://confectionery-business-frontend.vercel.app")
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials());
@@ -109,7 +109,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<SignalRService>();
 
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+// builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 var app = builder.Build();
 
@@ -124,9 +124,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.Urls.Add("http://*:5000");
+// app.Urls.Add("http://*:5000");
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseAuthentication();
