@@ -13,6 +13,15 @@ using Zavrsni_rad_API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5001, listenOptions =>
+    {
+        listenOptions.UseHttps("/etc/ssl/selfsigned/selfsigned.crt", "/etc/ssl/selfsigned/selfsigned.key");
+    });
+});
+
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
@@ -110,6 +119,7 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<SignalRService>();
 
 // builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 
 var app = builder.Build();
 
