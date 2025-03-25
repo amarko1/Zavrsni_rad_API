@@ -34,13 +34,13 @@ namespace DAL.AppDbContext
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("server=.;Database=ConfectioneryBusinessDB;User=sa;Password=SQL;TrustServerCertificate=True;MultipleActiveResultSets=true");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        optionsBuilder.UseSqlServer("server=.;Database=ConfectioneryBusinessDB;User=sa;Password=SQL;TrustServerCertificate=True;MultipleActiveResultSets=true");
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
