@@ -102,11 +102,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin", policy =>
         policy
             .SetIsOriginAllowed(origin =>
-                new Uri(origin).Host.EndsWith("vercel.app"))
+            {
+                Console.WriteLine("CORS Origin: " + origin); // Log u journalctl
+                return new Uri(origin).Host.EndsWith("vercel.app");
+            })
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
 });
+
 
 
 builder.Services.AddSignalR();
@@ -131,8 +135,8 @@ if (app.Environment.IsDevelopment())
 // app.Urls.Add("http://*:5000");
 
 //app.UseHttpsRedirection();
-app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 
