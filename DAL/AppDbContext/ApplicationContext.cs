@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace DAL.AppDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Product>()
                 .ToTable("Products"); 
 
@@ -138,6 +140,17 @@ namespace DAL.AppDbContext
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.CakeName)
                 .IsRequired();
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties()
+                             .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?)))
+                {
+                    property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
+                        v => v.ToUniversalTime(),
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));
+                }
+            }
 
             base.OnModelCreating(modelBuilder);
         }
