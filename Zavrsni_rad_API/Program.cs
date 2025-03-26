@@ -15,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
+    // HTTP fallback (opcionalan)
+    serverOptions.ListenAnyIP(5000);
+
+    // HTTPS s certifikatom
     serverOptions.ListenAnyIP(5001, listenOptions =>
     {
         listenOptions.UseHttps("/etc/ssl/selfsigned/selfsigned.crt", "/etc/ssl/selfsigned/selfsigned.key");
