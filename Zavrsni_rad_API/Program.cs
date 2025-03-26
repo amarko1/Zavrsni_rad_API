@@ -15,8 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(5000); // HTTP
-    serverOptions.ListenAnyIP(5001); // HTTPS æe se konfigurirati iz ENV
+    serverOptions.ListenAnyIP(5000);
 });
 
 
@@ -134,7 +133,7 @@ if (app.Environment.IsDevelopment())
 
 // app.Urls.Add("http://*:5000");
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseAuthentication();
