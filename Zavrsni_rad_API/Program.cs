@@ -99,12 +99,15 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("https://confectionery-business-frontend.vercel.app")
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           .AllowCredentials());
+    options.AddPolicy("AllowSpecificOrigin", policy =>
+        policy
+            .SetIsOriginAllowed(origin =>
+                new Uri(origin).Host.EndsWith("vercel.app"))
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
+
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<SignalRService>();
