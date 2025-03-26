@@ -101,16 +101,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
         policy
-            .SetIsOriginAllowed(origin =>
-            {
-                Console.WriteLine("CORS Origin: " + origin); // Log u journalctl
-                return new Uri(origin).Host.EndsWith("vercel.app");
-            })
+            .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyHeader());
 });
-
 
 
 builder.Services.AddSignalR();
