@@ -15,14 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    // HTTP fallback (opcionalan)
-    serverOptions.ListenAnyIP(5000);
-
-    // HTTPS s certifikatom
-    serverOptions.ListenAnyIP(5001, listenOptions =>
-    {
-        listenOptions.UseHttps("/etc/ssl/selfsigned/selfsigned.crt", "/etc/ssl/selfsigned/selfsigned.key");
-    });
+    serverOptions.ListenAnyIP(5000); // HTTP
+    serverOptions.ListenAnyIP(5001); // HTTPS æe se konfigurirati iz ENV
 });
 
 
@@ -140,7 +134,7 @@ if (app.Environment.IsDevelopment())
 
 // app.Urls.Add("http://*:5000");
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseAuthentication();
