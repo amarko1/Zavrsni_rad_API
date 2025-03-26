@@ -1,8 +1,10 @@
 using DAL.AppDbContext;
+using DAL.Models;
 using DAL.Repositories.Abstraction;
 using DAL.Repositories.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ServiceLayer.Mapping;
@@ -73,7 +75,9 @@ builder.Services.AddSwaggerGen(opt =>
 //});
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .ReplaceService<IValueConverterSelector, UtcValueConverterSelector>()
+);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IUserService, UserService>();
