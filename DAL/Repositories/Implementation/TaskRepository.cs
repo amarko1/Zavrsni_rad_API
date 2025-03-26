@@ -23,7 +23,7 @@ namespace DAL.Repositories.Implementation
         }
         public async Task CreateTaskAsync(TaskItem newTask)
         {
-            newTask.CreatedAt = DateTime.Now;
+            newTask.CreatedAt = DateTime.UtcNow;
             await _context.TaskItems.AddAsync(newTask);
             await _context.SaveChangesAsync();
         }

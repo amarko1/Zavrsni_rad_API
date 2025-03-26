@@ -21,7 +21,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task AddIngredientAsync(Ingredient ingredient)
         {
-            ingredient.CreatedAt = DateTime.Now;
+            ingredient.CreatedAt = DateTime.UtcNow;
             await _context.Ingredients.AddAsync(ingredient);
             await _context.SaveChangesAsync();
         }
@@ -49,7 +49,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task UpdateIngredientAsync(Ingredient ingredient)
         {
-            ingredient.UpdatedAt = DateTime.Now;
+            ingredient.UpdatedAt = DateTime.UtcNow;
             _context.Ingredients.Update(ingredient);
             await _context.SaveChangesAsync();
         }

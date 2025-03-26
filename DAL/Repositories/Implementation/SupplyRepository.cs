@@ -20,7 +20,7 @@ namespace DAL.Repositories.Implementation
         }
         public async Task AddSupplyAsync(Supply supply)
         {
-            supply.CreatedAt = DateTime.Now;
+            supply.CreatedAt = DateTime.UtcNow;
             await _context.Supplies.AddAsync(supply);
             await _context.SaveChangesAsync();
         }
@@ -53,7 +53,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task UpdateSupplyAsync(Supply supply)
         {
-            supply.UpdatedAt = DateTime.Now;
+            supply.UpdatedAt = DateTime.UtcNow;
             _context.Supplies.Update(supply);
             await _context.SaveChangesAsync();
         }

@@ -22,7 +22,7 @@ namespace DAL.Repositories.Implementation
 
         public void CreateUser(User newUser)
         {
-            newUser.CreatedAt = DateTime.Now;
+            newUser.CreatedAt = DateTime.UtcNow;
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }

@@ -21,7 +21,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task CreateCategoryAsync(Category newCategory)
         {
-            newCategory.CreatedAt = DateTime.Now;
+            newCategory.CreatedAt = DateTime.UtcNow;
             await _context.Categories.AddAsync(newCategory);
             await _context.SaveChangesAsync();
         }
@@ -43,7 +43,7 @@ namespace DAL.Repositories.Implementation
             {
                 category.Name = updatedCategory.Name;
                 category.Description = updatedCategory.Description;
-                category.UpdatedAt = DateTime.Now;
+                category.UpdatedAt = DateTime.UtcNow;
 
                 _context.Categories.Update(category);
                 await _context.SaveChangesAsync();

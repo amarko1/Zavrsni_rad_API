@@ -37,7 +37,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task AddRecipeAsync(Recipe recipe)
         {
-            recipe.CreatedAt = DateTime.Now;
+            recipe.CreatedAt = DateTime.UtcNow;
 
             // Dodaj recept i povezane sastojke
             await _context.Recipes.AddAsync(recipe);
@@ -61,7 +61,7 @@ namespace DAL.Repositories.Implementation
                 existingRecipe.StorageInformation = recipe.StorageInformation;
                 existingRecipe.Allergens = recipe.Allergens;
                 existingRecipe.CategoryId = recipe.CategoryId;
-                existingRecipe.UpdatedAt = DateTime.Now;
+                existingRecipe.UpdatedAt = DateTime.UtcNow;
 
                 // Očisti trenutne sastojke
                 _context.RecipeIngredients.RemoveRange(existingRecipe.RecipeIngredients);

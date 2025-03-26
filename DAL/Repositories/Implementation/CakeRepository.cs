@@ -21,7 +21,7 @@ namespace DAL.Repositories.Implementation
 
         public async Task CreateCakeAsync(Cake newCake)
         {
-            newCake.CreatedAt = DateTime.Now;
+            newCake.CreatedAt = DateTime.UtcNow;
             await _context.Cakes.AddAsync(newCake);
             await _context.SaveChangesAsync();
         }
@@ -53,7 +53,7 @@ namespace DAL.Repositories.Implementation
                 cake.ImageContent = updatedCake.ImageContent;
                 cake.CategoryId = updatedCake.CategoryId;
                 cake.Allergens = updatedCake.Allergens;
-                cake.UpdatedAt = DateTime.Now;
+                cake.UpdatedAt = DateTime.UtcNow;
 
                 _context.Cakes.Update(cake);
                 await _context.SaveChangesAsync();
